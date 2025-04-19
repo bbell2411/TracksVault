@@ -1,0 +1,5 @@
+DROP DATABASE IF EXISTS TrackVault;
+CREATE DATABASE TrackVault;
+
+DROP DATABASE IF EXISTS TrackVault_test;
+CREATE DATABASE TrackVault_test;
