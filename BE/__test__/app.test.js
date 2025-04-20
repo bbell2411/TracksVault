@@ -35,7 +35,7 @@ describe('GET /api/songs', () => {
                     const { song_name, artist, link, song_id } = song
                     expect(typeof song_id).toBe('number')
                     expect(typeof song_name).toBe('string')
-                    expect(typeof artist).toBe('string')
+                    expect(typeof artist).toBe('number')
                     expect(typeof link).toBe('string')
                 })
             })
@@ -51,7 +51,7 @@ describe('GET /api/songs/:song_id', () => {
                 const { song_name, artist, link, song_id } = song
                 expect(song_id).toBe(2)
                 expect(typeof song_name).toBe('string')
-                expect(typeof artist).toBe('string')
+                expect(typeof artist).toBe('number')
                 expect(typeof link).toBe('string')
             })
     })
