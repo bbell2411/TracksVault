@@ -42,3 +42,35 @@ describe('GET /api/songs', () => {
 
     })
 })
+describe('GET /api/songs/:song_id', () => {
+    test('200: gets song by id', () => {
+        return request(app)
+            .get('/api/songs/2')
+            .expect(200)
+            .then(({ body: { song } }) => {
+                const { song_name, artist, link, song_id } = song
+                expect(song_id).toBe(2)
+                expect(typeof song_name).toBe('string')
+                expect(typeof artist).toBe('string')
+                expect(typeof link).toBe('string')
+            })
+    })
+
+    test('404: error when id not found', () => {
+        return request(app)
+            .get("/api/songs/10")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("song not found")
+            })
+    })
+    test('400: error when id is invalid', () => {
+        return request(app)
+            .get("/api/songs/heya")
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+
+})
