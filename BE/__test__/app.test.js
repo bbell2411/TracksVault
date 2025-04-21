@@ -74,3 +74,46 @@ describe('GET /api/songs/:song_id', () => {
     })
 
 })
+describe('GET /api/artists', () => {
+    test('200: returns all artists', () => {
+        return request(app)
+            .get('/api/artists')
+            .expect(200)
+            .then(({ body: { artists } }) => {
+                artists.forEach((artist) => {
+                    const { artists_name, artist_id } = artist
+                    expect(typeof artist_id).toBe('number')
+                    expect(typeof artists_name).toBe('string')
+                })
+            })
+    })
+})
+
+describe('GET /api/artists/:artist_id',()=>{
+    test('200: returns artist by id',()=>{
+        return request(app)
+        .get('/api/artists/2')
+        .expect(200)
+        .then(({body:{artist}})=>{
+            const {artist_id, artists_name}= artist
+            expect(artist_id).toBe(2)
+            expect(typeof artists_name).toBe('string')
+        })
+    })
+    test('404: returns error message when id not found',()=>{
+        return request(app)
+        .get('/api/artists/383')
+        .expect(404)
+        .then(({body})=>{
+            expect(body.msg).toBe('not found')
+        })
+    })
+    test('400: returns error message when id is not valid',()=>{
+        return request(app)
+        .get('/api/artists/hola')
+        .expect(400)
+        .then(({body})=>{
+            expect(body.msg).toBe('bad request')
+        })
+    })
+})
