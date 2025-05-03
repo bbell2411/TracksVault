@@ -8,7 +8,7 @@ module.exports=[
         username:"james101",
         email:'james101@gmail.com',
         password:"James2000"
-    },
+    }
 
 ]
 //hash passwords using bycript

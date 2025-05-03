@@ -8,6 +8,16 @@ exports.ArtistsLookup = (artistsData) => {
     }
     return res
   }
+  exports.songsLookup = (songsData) => {
+    if (songsData.length === 0) {
+      return {}
+    }
+    const res = {}
+    for (let i = 0; i < songsData.length; i++) {
+      res[songsData[i].song_name] = songsData[i].song_id
+    }
+    return res
+  }
 
   exports.formatSongs = (songs, artists) => {
     if (artists.length === 0) {
@@ -22,6 +32,22 @@ exports.ArtistsLookup = (artistsData) => {
       const song = songsCopy[i]
       song.artist_id = lookupObj[song.artist]
       formattedData.push(song)
+    }
+    return formattedData
+  }
+  exports.playlistSongsFormat = (playlist, songs) => {
+    if (songs.length === 0) {
+      return []
+    }
+    const playlistCopy = [...playlist]
+    const songsCopy = [...songs]
+    const formattedData = []
+    const lookupObj = this.songsLookup(songsCopy)
+  
+    for (let i = 0; i < playlistCopy.length; i++) {
+      const pl = playlistCopy[i]
+      pl.song_id = lookupObj[pl.song]
+      formattedData.push(pl)
     }
     return formattedData
   }
