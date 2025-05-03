@@ -115,7 +115,143 @@ describe('seed', () => {
                 })
         })
     })
+    describe('users table', () => {
+        test('users table exists', () => {
+            return db
+                .query(
+                    `SELECT EXISTS (
+                        SELECT FROM 
+                            information_schema.tables 
+                        WHERE 
+                            table_name = 'users'
+                        );`
+                )
+                .then(({ rows: [{ exists }] }) => {
+                    expect(exists).toBe(true);
+                });
+        })
+        test('users table has username the primary key', () => {
+            return db
+                .query(
+                    `SELECT column_name
+                          FROM information_schema.table_constraints AS tc
+                          JOIN information_schema.key_column_usage AS kcu
+                          ON tc.constraint_name = kcu.constraint_name
+                          WHERE tc.constraint_type = 'PRIMARY KEY'
+                          AND tc.table_name = 'users';`
+                )
+                .then(({ rows: [{ column_name }] }) => {
+                    expect(column_name).toBe('username');
+                });
+        });
+        test('users table has email as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'users'
+                        AND column_name = 'email';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('email');
+                    expect(column.data_type).toBe('text');
+                })
+        })
+    })
+   describe('playlist table', () => {
+        test('playlist table exists', () => {
+            return db
+                .query(
+                    `SELECT EXISTS (
+                        SELECT FROM 
+                            information_schema.tables 
+                        WHERE 
+                            table_name = 'playlist'
+                        );`
+                )
+                .then(({ rows: [{ exists }] }) => {
+                    expect(exists).toBe(true);
+                });
+        })
+        test('playlist table has playlist_id the primary key', () => {
+            return db
+                .query(
+                    `SELECT column_name
+                          FROM information_schema.table_constraints AS tc
+                          JOIN information_schema.key_column_usage AS kcu
+                          ON tc.constraint_name = kcu.constraint_name
+                          WHERE tc.constraint_type = 'PRIMARY KEY'
+                          AND tc.table_name = 'playlist'`
+                )
+                .then(({ rows: [{ column_name }] }) => {
+                    expect(column_name).toBe('playlist_id');
+                });
+        });
+        test('playlist table has name as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'playlist'
+                        AND column_name = 'name';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('name');
+                    expect(column.data_type).toBe('text');
+                })
+        })
+        test('playlist table has user_id as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'playlist'
+                        AND column_name = 'user_id';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('user_id');
+                    expect(column.data_type).toBe('character varying');
+                })
+        })
+    })
+    describe('playlist_songs table', () => {
+        test('playlist_songs table exists', () => {
+            return db
+                .query(
+                    `SELECT EXISTS (
+                        SELECT FROM 
+                            information_schema.tables 
+                        WHERE 
+                            table_name = 'playlist_songs'
+                        );`
+                )
+                .then(({ rows: [{ exists }] }) => {
+                    expect(exists).toBe(true);
+                });
+        })
+        test('playlist_songs table has song_id as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'playlist_songs'
+                        AND column_name = 'song_id';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('song_id');
+                    expect(column.data_type).toBe('integer');
+                })
+        })
+        test('playlist_songs table has playlist_id as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'playlist_songs'
+                        AND column_name = 'playlist_id';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('playlist_id');
+                    expect(column.data_type).toBe('integer');
+                })
+        })
 
+    })
     describe('data insertion', () => {
         test('artists data has been inserted correctly', () => {
             return db.query(`SELECT * FROM artists;`).then(({ rows: artists }) => {
