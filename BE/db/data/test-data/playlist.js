@@ -1,0 +1,14 @@
+module.exports=[
+    {
+        name:"playlist1",
+        username:"jess202"
+    },
+    {
+        name:"playlist2",
+        username:"jess202"
+    },
+    {
+        name:"playlist3",
+        username:"james101"
+    }
+]
