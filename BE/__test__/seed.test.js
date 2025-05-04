@@ -308,8 +308,8 @@ describe('seed', () => {
             return db.query(`SELECT * FROM playlist_songs`).then(({ rows: playlist_songs }) => {
                 expect(playlist_songs).toHaveLength(3);
                 playlist_songs.forEach((playlist) => {
-                    expect(playlist).toHaveProperty('playlist');
-                    expect(playlist).toHaveProperty('song');
+                    expect(playlist).toHaveProperty('playlist_id');
+                    expect(playlist).toHaveProperty('song_id');
                 });
             });
         })

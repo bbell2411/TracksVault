@@ -1,4 +1,4 @@
-const { ArtistsLookup, formatSongs, songsLookup, playlistSongsFormat } = require('../db/seeds/utils')
+const { ArtistsLookup, formatSongs, songsLookup, playlistSongsFormat,playlistLookup  } = require('../db/seeds/utils')
 
 describe('articlesLookup', () => {
     test('returns empty object if array is empty', () => {
@@ -174,5 +174,33 @@ describe('format playlist songs', () => {
             playlist: "playlist3",
             song: "song two"
         }])
+    })
+})
+
+describe('playlistLookup',()=>{
+    test('returns object with the key as the name and id as value',()=>{
+        const input=[
+            {
+                playlist_id:1,
+                name:"playlist1",
+                username:"jess202"
+            },
+            {
+                playlist_id:2,
+                name:"playlist2",
+                username:"jess202"
+            },
+            {
+                playlist_id:3,
+                name:"playlist3",
+                username:"james101"
+            }
+        ]
+        const output=playlistLookup(input)
+        expect(output).toEqual({
+            "playlist1":1,
+            "playlist2":2,
+            "playlist3":3
+        })
     })
 })
