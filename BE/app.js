@@ -8,6 +8,7 @@ const { getSongs, getSongById } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
 const { getUsers,getUsersById } = require('./controllers/users.controller');
+const { getPlaylists,getPlaylistById } = require('./controllers/playlist.controller');
 
 app.use(cors());
 
@@ -19,6 +20,8 @@ app.get("/api/artists", getArtists)
 app.get("/api/artists/:artist_id", getArtistsById)
 app.get("/api/users", getUsers)
 app.get("/api/users/:username", getUsersById)
+app.get('/api/playlists',getPlaylists)
+app.get('/api/playlists/:playlist_id',getPlaylistById)
 //insert the data 
 //gets users playlist
 //get all playlists
