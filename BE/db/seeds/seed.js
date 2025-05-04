@@ -1,6 +1,6 @@
 const db = require("../connection")
 const format = require('pg-format')
-const { formatSongs, playlistSongsFormat } = require('../seeds/utils')
+const { formatSongs, playlistLookup, songsLookup } = require('../seeds/utils')
 
 const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs }) => {
     let insertedSongs
@@ -73,7 +73,7 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
             return db.query(sql)
         })
         .then((insertedSongsData) => {
-            insertedSongs=insertedSongsData.rows
+            insertedSongs = insertedSongsData.rows
             const nestedArray = usersData.map((user) => {
                 return [user.username, user.email, user.password]
             })
@@ -96,11 +96,18 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
                 returning *`, nestedArray)
             return db.query(sql)
         })
-        .then((insertedPlayistData) => {
-            const nestedArray = playlistSongsFormat(playlist_songs,insertedSongs.rows).map((pl)=>{
-                return [pl.song_id,pl.playlist_id]
-                //make a format function for playlist
+        .then((insertedPlaylist) => {
+            const songsLookupObj = songsLookup(insertedSongs)
+            const playlistLookupObj = playlistLookup(insertedPlaylist.rows)
+            const nestedArray = playlist_songs.map((pl) => {
+                return [songsLookupObj[pl.song], playlistLookupObj[pl.playlist]]
             })
+            const sql = format(`insert into playlist_songs
+            (song_id, playlist_id)
+            values
+            %L
+            returning *`,nestedArray)
+            return db.query(sql)
         })
 
 }
