@@ -190,7 +190,7 @@ describe('GET /api/playlists/:playlist_id', () => {
         return request(app)
             .get('/api/playlists/sadsongs')
             .expect(400)
-            .then(({body})=>{
+            .then(({ body }) => {
                 expect(body.msg).toBe("bad request")
             })
     })
@@ -198,7 +198,56 @@ describe('GET /api/playlists/:playlist_id', () => {
         return request(app)
             .get('/api/playlists/338')
             .expect(404)
-            .then(({body})=>{
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found")
+            })
+    })
+})
+
+describe('GET /api/users/:username/playlists', () => {
+    test("200: returns users playlists", () => {
+        return request(app)
+            .get('/api/users/jess202/playlists')
+            .expect(200)
+            .then(({ body: { playlists } }) => {
+                expect(playlists.length).toBe(2)
+                playlists.forEach((pl) => {
+                    const { playlist_id, user_id, name } = pl
+                    expect(typeof playlist_id).toBe("number")
+                    expect(typeof name).toBe("string")
+                    expect(user_id).toBe("jess202")
+                })
+            })
+    })
+    test("404: error if user not found", () => {
+        return request(app)
+            .get('/api/users/jhonny/playlists')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found")
+            })
+    })
+})
+describe("GET /api/playlists/:playlist_id/songs", () => {
+    test('200: returns all playlist songs', () => {
+        return request(app)
+            .get('/api/playlists/1/songs')
+            .expect(200)
+            .then(({ body: { songs } }) => {
+                songs.forEach((song) => {
+                    const { song_id, song_name, link, playlist_name } = song
+                    expect(typeof song_id).toBe("number")
+                    expect(typeof song_name).toBe("string")
+                    expect(typeof link).toBe("string")
+                    expect(typeof playlist_name).toBe("string")
+                })
+            })
+    })
+    test('404: returns 404 err when playlist doest exist', () => {
+        return request(app)
+            .get('/api/playlists/78/songs')
+            .expect(404)
+            .then(({ body }) => {
                 expect(body.msg).toBe("not found")
             })
     })

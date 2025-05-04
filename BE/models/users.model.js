@@ -16,3 +16,16 @@ exports.fetchUsersbyId = (username) => {
             return rows[0]
         })
 }
+
+exports.fetchUsersPlaylists = async (id) => {
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [id])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    return db.query(`select * from playlist
+        where user_id=$1`, [id])
+        .then(({ rows }) => {
+            return rows
+        })
+}

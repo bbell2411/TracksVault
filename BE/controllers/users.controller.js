@@ -1,4 +1,4 @@
-const { fetchUsers,fetchUsersbyId } = require("../models/users.model")
+const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
     fetchUsers().then((users) => {
@@ -9,11 +9,21 @@ exports.getUsers = (req, res, next) => {
         })
 }
 
-exports.getUsersById=(req,res,next)=>{
-    const {username}=req.params
+exports.getUsersById = (req, res, next) => {
+    const { username } = req.params
     fetchUsersbyId(username)
-    .then((user)=>{
-        res.status(200).send({user})
+        .then((user) => {
+            res.status(200).send({ user })
+        })
+        .catch((err) => {
+            next(err)
+        })
+}
+
+exports.getUsersPlaylists = (req,res,next) => {
+    const {username}=req.params
+    fetchUsersPlaylists(username).then((playlists)=>{
+        res.status(200).send({playlists})
     })
     .catch((err)=>{
         next(err)

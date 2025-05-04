@@ -46,8 +46,8 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
         })
         .then(() => {
             return db.query(`create table playlist_songs (
-            playlist_id int REFERENCES playlist(playlist_id),
-            song_id int REFERENCES songs(song_id)
+            playlist_id int REFERENCES playlist(playlist_id) ON DELETE CASCADE,
+            song_id int REFERENCES songs(song_id) ON DELETE CASCADE
             )`)
         })
         .then(() => {

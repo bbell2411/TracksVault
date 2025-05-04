@@ -7,8 +7,8 @@ const { getEndpoints } = require('./controllers/getEndpoints.controller');
 const { getSongs, getSongById } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
-const { getUsers,getUsersById } = require('./controllers/users.controller');
-const { getPlaylists,getPlaylistById } = require('./controllers/playlist.controller');
+const { getUsers, getUsersById, getUsersPlaylists } = require('./controllers/users.controller');
+const { getPlaylists, getPlaylistById, getPlaylistSongs } = require('./controllers/playlist.controller');
 
 app.use(cors());
 
@@ -20,14 +20,11 @@ app.get("/api/artists", getArtists)
 app.get("/api/artists/:artist_id", getArtistsById)
 app.get("/api/users", getUsers)
 app.get("/api/users/:username", getUsersById)
-app.get('/api/playlists',getPlaylists)
-app.get('/api/playlists/:playlist_id',getPlaylistById)
+app.get('/api/playlists', getPlaylists)
+app.get('/api/playlists/:playlist_id', getPlaylistById)
+app.get('/api/users/:username/playlists', getUsersPlaylists)
+app.get('/api/playlists/:playlist_id/songs', getPlaylistSongs)
 //insert the data 
-//gets users playlist
-//get all playlists
-//maybe get songs from playlist_songs
-//get playlists from playlist_songs?
-//ask chat how tf the junction table works in all this...
 app.use(handlePsqlErrors)
 
 app.use(handleCustomErrors)
