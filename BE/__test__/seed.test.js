@@ -156,6 +156,18 @@ describe('seed', () => {
                     expect(column.data_type).toBe('text');
                 })
         })
+        test('users table has password as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'users'
+                        AND column_name = 'password';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('password');
+                    expect(column.data_type).toBe('text');
+                })
+        })
     })
    describe('playlist table', () => {
         test('playlist table exists', () => {
@@ -270,6 +282,34 @@ describe('seed', () => {
                     expect(song).toHaveProperty('song_name');
                     expect(song).toHaveProperty('artist');
                     expect(song).toHaveProperty('link');
+                });
+            });
+        })
+        test('users data has been inserted correctly', () => {
+            return db.query(`SELECT * FROM users;`).then(({ rows: users }) => {
+                expect(users).toHaveLength(2);
+                users.forEach((user) => {
+                    expect(user).toHaveProperty('username');
+                    expect(user).toHaveProperty('email');
+                    expect(user).toHaveProperty('password');
+                });
+            });
+        })
+        test('playlist data has been inserted correctly', () => {
+            return db.query(`SELECT * FROM playlist`).then(({ rows: playlists }) => {
+                expect(playlists).toHaveLength(3);
+                playlists.forEach((playlist) => {
+                    expect(playlist).toHaveProperty('name');
+                    expect(playlist).toHaveProperty('user_id');
+                });
+            });
+        })
+        test('playlist_songs data has been inserted correctly', () => {
+            return db.query(`SELECT * FROM playlist_songs`).then(({ rows: playlist_songs }) => {
+                expect(playlist_songs).toHaveLength(3);
+                playlist_songs.forEach((playlist) => {
+                    expect(playlist).toHaveProperty('playlist');
+                    expect(playlist).toHaveProperty('song');
                 });
             });
         })

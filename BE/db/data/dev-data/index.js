@@ -1,2 +1,5 @@
 exports.songsData= require('./songs')
-exports.ArtistsData= require('./artists')
+exports.artistsData= require('./artists')
+exports.playlistData= require('./playlist')
+exports.usersData= require('./users')
+exports.playlist_songs=require('./playlist_songs')

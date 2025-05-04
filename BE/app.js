@@ -7,6 +7,7 @@ const { getEndpoints } = require('./controllers/getEndpoints.controller');
 const { getSongs, getSongById } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
+const { getUsers,getUsersById } = require('./controllers/users.controller');
 
 app.use(cors());
 
@@ -16,9 +17,14 @@ app.get("/api/songs", getSongs)
 app.get("/api/songs/:song_id", getSongById)
 app.get("/api/artists", getArtists)
 app.get("/api/artists/:artist_id", getArtistsById)
-
-
-
+app.get("/api/users", getUsers)
+app.get("/api/users/:username", getUsersById)
+//insert the data 
+//gets users playlist
+//get all playlists
+//maybe get songs from playlist_songs
+//get playlists from playlist_songs?
+//ask chat how tf the junction table works in all this...
 app.use(handlePsqlErrors)
 
 app.use(handleCustomErrors)
@@ -35,3 +41,5 @@ module.exports = app
 // patch(for playlists?) (ask if we need another table)
 //is yt api used in be or fe? (ask)
 //LISTEN FILE?!?!?!
+
+//ENDPOINTS.JSON

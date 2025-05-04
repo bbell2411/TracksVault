@@ -1,4 +1,4 @@
-const { ArtistsLookup, formatSongs } = require('../db/seeds/utils')
+const { ArtistsLookup, formatSongs, songsLookup, playlistSongsFormat } = require('../db/seeds/utils')
 
 describe('articlesLookup', () => {
     test('returns empty object if array is empty', () => {
@@ -32,6 +32,43 @@ describe('articlesLookup', () => {
         })
     })
 })
+describe('songsLookup', () => {
+    test('returns empty object when array is empty', () => {
+        const input = []
+        const output = songsLookup(input)
+        expect(output).toEqual({})
+    })
+    test('returns object when array has one element', () => {
+        const input = [{
+            song_id: 1,
+            song_name: "song one",
+            artist: 'artist one',
+            link: "link one"
+
+        }]
+        const output = songsLookup(input)
+        expect(output).toEqual({ "song one": 1 })
+    })
+    test('returns object when array has multiple element', () => {
+        const input = [{
+            song_id: 1,
+            song_name: "song one",
+            artist: 'artist one',
+            link: "link one"
+        },
+        {
+            song_id: 2,
+            song_name: "song two",
+            artist: "artist two",
+            link: "link two"
+        }]
+        const output = songsLookup(input)
+        expect(output).toEqual({
+            "song one": 1,
+            "song two": 2
+        })
+    })
+})
 
 describe('format songs', () => {
     test('returns empty array if input data is empty', () => {
@@ -46,7 +83,7 @@ describe('format songs', () => {
             }
         ]
         const artists = []
-        const output= formatSongs(songs, artists)
+        const output = formatSongs(songs, artists)
         expect(output).toEqual([])
     })
     test('returns correct formatted array', () => {
@@ -62,28 +99,80 @@ describe('format songs', () => {
         ]
         const artists = [
             {
-                artist_id:1,
+                artist_id: 1,
                 artists_name: "artist 1"
             },
             {
-                artist_id:2,
+                artist_id: 2,
                 artists_name: "artist 2"
             }
         ]
-        const output= formatSongs(songs,artists)
+        const output = formatSongs(songs, artists)
         expect(output).toEqual(
             [
                 {
-                    artist_id:1,
+                    artist_id: 1,
                     song: "song 1",
                     artist: "artist 1"
                 },
                 {
-                    artist_id:2,
+                    artist_id: 2,
                     song: "song 2",
                     artist: "artist 2"
                 }
             ]
         )
+    })
+})
+describe('format playlist songs', () => {
+    test('returns empty array if input is empty', () => {
+        const input1 = ["eg"]
+        const input2 = []
+        const output = playlistSongsFormat(input1, input2)
+        expect(output).toEqual([])
+    })
+    test('returns formatted array with song_id in playlist obj', () => {
+        const input1 = [{
+            playlist: "playlist1",
+            song: "song one"
+        },
+        {
+            playlist: "playlist1",
+            song: "song two"
+        },
+        {
+            playlist: "playlist3",
+            song: "song two"
+        }]
+
+        const input2 = [{
+            song_id: 1,
+            song_name: "song one",
+            artist: 'artist one',
+            link: "link one"
+
+        },
+        {
+            song_id: 2,
+            song_name: "song two",
+            artist: "artist two",
+            link: "link two"
+        }]
+        const output = playlistSongsFormat(input1, input2)
+        expect(output).toEqual([{
+            song_id: 1,
+            playlist: "playlist1",
+            song: "song one"
+        },
+        {
+            song_id: 2,
+            playlist: "playlist1",
+            song: "song two"
+        },
+        {
+            song_id: 2,
+            playlist: "playlist3",
+            song: "song two"
+        }])
     })
 })
