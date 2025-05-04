@@ -1,1 +1,116 @@
-{}
+{
+    "GET /api": {
+        "description": "Returns JSON describing all available endpoints."
+    },
+    "GET /api/songs": {
+        "description": "Returns a list of all songs.",
+        "exampleResponse": {
+            "songs": [
+                {
+                    "song_id": 1,
+                    "song_name": "Blinding Lights",
+                    "artist": 1,
+                    "link": "https://youtube.com/song123"
+                }
+            ]
+        }
+    },
+    "GET /api/songs/:song_id": {
+        "description": "Returns a specific song by ID.",
+        "exampleResponse": {
+            "song": {
+                "song_id": 1,
+                "song_name": "Blinding Lights",
+                "artist": 1,
+                "link": "https://youtube.com/song123"
+            }
+        }
+    },
+    "GET /api/artists": {
+        "description": "Returns a list of all artists.",
+        "exampleResponse": {
+            "artists": [
+                {
+                    "artist_id": 1,
+                    "artists_name": "The Weeknd"
+                }
+            ]
+        }
+    },
+    "GET /api/artists/:artist_id": {
+        "description": "Returns details for a specific artist.",
+        "exampleResponse": {
+            "artist": {
+                "artist_id": 1,
+                "artists_name": "The Weeknd"
+            }
+        }
+    },
+    "GET /api/users": {
+        "description": "Returns a list of all users.",
+        "exampleResponse": {
+            "users": [
+                {
+                    "username": "jess202",
+                    "email": "jess@example.com"
+                }
+            ]
+        }
+    },
+    "GET /api/users/:username": {
+        "description": "Returns user details for a specific username.",
+        "exampleResponse": {
+            "user": {
+                "username": "jess202",
+                "email": "jess@example.com"
+            }
+        }
+    },
+    "GET /api/playlists": {
+        "description": "Returns a list of all playlists.",
+        "exampleResponse": {
+            "playlists": [
+                {
+                    "playlist_id": 1,
+                    "name": "Chill Vibes",
+                    "user_id": "jess202"
+                }
+            ]
+        }
+    },
+    "GET /api/playlists/:playlist_id": {
+        "description": "Returns details for a specific playlist.",
+        "exampleResponse": {
+            "playlist": {
+                "playlist_id": 1,
+                "name": "Chill Vibes",
+                "user_id": "jess202"
+            }
+        }
+    },
+    "GET /api/users/:username/playlists": {
+        "description": "Returns all playlists created by a specific user.",
+        "exampleResponse": {
+            "playlists": [
+                {
+                    "playlist_id": 1,
+                    "name": "Chill Vibes",
+                    "user_id": "jess202"
+                }
+            ]
+        }
+    },
+    "GET /api/playlists/:playlist_id/songs": {
+        "description": "Returns all songs in a specific playlist.",
+        "exampleResponse": {
+            "songs": [
+                {
+                    "song_id": 1,
+                    "song_name": "Blinding Lights",
+                    "artist": 1,
+                    "link": "https://youtube.com/song123"
+                }
+            ]
+        }
+    }
+}
