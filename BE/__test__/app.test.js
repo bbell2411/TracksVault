@@ -3,7 +3,8 @@ const request = require('supertest')
 const seed = require('../db/seeds/seed')
 const data = require('../db/data/test-data/index')
 const app = require('../app')
-const db = require('../db/connection')
+const db = require('../db/connection');
+const playlist = require("../db/data/test-data/playlist");
 
 beforeEach(() => {
     return seed(data);
@@ -140,28 +141,65 @@ describe('GET /api/users/:username', () => {
             .get("/api/users/jess202")
             .expect(200)
             .then(({ body: { user } }) => {
-                expect(users.length).toBe(1)
                 const { username, email, password } = user
-                expect(typeof username).toBe("jess202")
+                expect(username).toBe("jess202")
                 expect(typeof email).toBe("string")
                 expect(typeof password).toBe("string")
 
             })
     })
-    test("400: returns bad request error",()=>{
+    test("404: returns 404 error if username not found", () => {
         return request(app)
-        .get("/api/users/468")
-        .expect(400)
-        .then(({body})=>{
-            expect(body.msg).toBe('bad request')
-        })
+            .get("/api/users/hellobjhdd")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('not found')
+            })
     })
-    test("404: returns 404 error if username not found",()=>{
+})
+
+describe('GET /api/playlists', () => {
+    test('200: returns all playlists', () => {
         return request(app)
-        .get("/api/users/hellobjhdd")
-        .expect(404)
-        .then(({body})=>{
-            expect(body.msg).toBe('not found')
-        })
+            .get('/api/playlists')
+            .expect(200)
+            .then(({ body: { playlists } }) => {
+                expect(playlists.length).toBe(3)
+                playlists.forEach((pl) => {
+                    const { playlist_id, name, user_id } = pl
+                    expect(typeof name).toBe("string")
+                    expect(typeof playlist_id).toBe("number")
+                    expect(typeof user_id).toBe("string")
+                })
+            })
+    })
+})
+describe('GET /api/playlists/:playlist_id', () => {
+    test('200: returns playlist by id', () => {
+        return request(app)
+            .get('/api/playlists/2')
+            .expect(200)
+            .then(({ body: { playlist } }) => {
+                const { playlist_id, name, user_id } = playlist
+                expect(playlist_id).toBe(2)
+                expect(typeof name).toBe("string")
+                expect(typeof user_id).toBe("string")
+            })
+    })
+    test('400: bad request error', () => {
+        return request(app)
+            .get('/api/playlists/sadsongs')
+            .expect(400)
+            .then(({body})=>{
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('404: not found error', () => {
+        return request(app)
+            .get('/api/playlists/338')
+            .expect(404)
+            .then(({body})=>{
+                expect(body.msg).toBe("not found")
+            })
     })
 })
