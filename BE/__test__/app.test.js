@@ -4,7 +4,7 @@ const seed = require('../db/seeds/seed')
 const data = require('../db/data/test-data/index')
 const app = require('../app')
 const db = require('../db/connection');
-const playlist = require("../db/data/test-data/playlist");
+const { pass } = require("jest-extended");
 
 beforeEach(() => {
     return seed(data);
@@ -252,3 +252,31 @@ describe("GET /api/playlists/:playlist_id/songs", () => {
             })
     })
 })
+describe('POST /api/users', () => {
+    test('201: creates a new user', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 'bell24',
+                email: 'bell@gmail.com',
+                password: 'bell123'
+            })
+            .expect(201)
+            .then(({ body:{user} }) => {
+                expect(user.username).toBe('bell24')
+                expect(user.email).toBe("bell@gmail.com")
+                expect(user).not.toHaveProperty("password")
+            })
+    })
+})
+// eturn request(app)
+//       .post('/api/articles/6/comments')
+//       .send({
+//         username: 'fakeUser',
+//         body: 'i love cats'
+//       })
+//       .expect(404)
+//       .then(({ body }) => {
+//         expect(body.msg).toBe('not found')
+//       })
+//   })
