@@ -1,4 +1,4 @@
-const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists } = require("../models/users.model")
+const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
     fetchUsers().then((users) => {
@@ -20,12 +20,25 @@ exports.getUsersById = (req, res, next) => {
         })
 }
 
-exports.getUsersPlaylists = (req,res,next) => {
-    const {username}=req.params
-    fetchUsersPlaylists(username).then((playlists)=>{
-        res.status(200).send({playlists})
+exports.getUsersPlaylists = (req, res, next) => {
+    const { username } = req.params
+    fetchUsersPlaylists(username).then((playlists) => {
+        res.status(200).send({ playlists })
     })
-    .catch((err)=>{
-        next(err)
+        .catch((err) => {
+            next(err)
+        })
+}
+const bcrypt = require("bcrypt")
+
+exports.postUsers = async (req, res, next) => {
+    const { username, email, password } = req.body
+    const hashedPassword = await bcrypt.hash(password, 10)
+    createUsers(username, email, hashedPassword).then((user) => {
+        delete user.password
+        res.status(201).send({ user })
     })
+        .catch((err) => {
+            next(err)
+        })
 }

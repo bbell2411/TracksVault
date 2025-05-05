@@ -29,3 +29,10 @@ exports.fetchUsersPlaylists = async (id) => {
             return rows
         })
 }
+exports.createUsers = (username, email, password) => {
+    return db.query(`insert into users (username, email, password)
+        values ($1, $2, $3) returning *`, [username, email, password])
+        .then(({ rows }) => {
+            return rows[0]
+        })
+}
