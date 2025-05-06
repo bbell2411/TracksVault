@@ -262,21 +262,10 @@ describe('POST /api/users', () => {
                 password: 'bell123'
             })
             .expect(201)
-            .then(({ body:{user} }) => {
+            .then(({ body: { user } }) => {
                 expect(user.username).toBe('bell24')
                 expect(user.email).toBe("bell@gmail.com")
                 expect(user).not.toHaveProperty("password")
             })
     })
 })
-// eturn request(app)
-//       .post('/api/articles/6/comments')
-//       .send({
-//         username: 'fakeUser',
-//         body: 'i love cats'
-//       })
-//       .expect(404)
-//       .then(({ body }) => {
-//         expect(body.msg).toBe('not found')
-//       })
-//   })
