@@ -47,3 +47,25 @@ exports.createUsers = async (username, email, password) => {
             return rows[0]
         })
 }
+exports.createPlaylist = async (user_id, playlist_name) => {
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [user_id])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    const checkPlaylistExists = await db.query(`select * from playlist
+        where user_id=$1
+        and name=$2`, [user_id, playlist_name])
+
+    if (checkPlaylistExists.rows.length > 0) {
+        return Promise.reject({ status: 400, msg: "playlist already exists" })
+    }
+    return db.query(
+        `INSERT INTO playlist (user_id, name)
+         VALUES ($1, $2)
+         RETURNING *`,
+        [user_id, playlist_name])
+        .then(({ rows }) => {
+            return rows[0]
+        })
+}

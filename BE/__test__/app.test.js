@@ -398,3 +398,83 @@ describe('POST /api/users', () => {
             })
     })
 })
+describe('POST /api/users/:username/playlists', () => {
+    test('201: creates a new playlist', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists')
+            .send({
+                name: 'My Playlist',
+            })
+            .expect(201)
+            .then(({ body: { playlist } }) => {
+                expect(playlist.name).toBe('My Playlist')
+                expect(playlist.playlist_id).toBe(4)
+                expect(playlist.user_id).toBe('jess202')
+            })
+    })
+    test('400: returns error when missing required fields', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists')
+            .send({
+                name: '',
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+    })
+    test('400: returns error when keys are missing', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists')
+            .send({
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+    })
+    test('400: rejects whitespace-only fields', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists')
+            .send({
+                name: '   ',
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+    })
+    test("400: rejects playlist name that user already has", () => {
+        return request(app)
+            .post('/api/users/jess202/playlists')
+            .send({
+                name: 'playlist1',
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("playlist already exists")
+            })
+    })
+    test('400: rejects non-string input types', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists')
+            .send({
+                name: ["nice"]
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("invalid input types");
+            })
+    })
+    test('404: returns error if username doesnt exist', () => {
+        return request(app)
+            .post('/api/users/NOTjess/playlists')
+            .send({
+                name: "happy songs",
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+})

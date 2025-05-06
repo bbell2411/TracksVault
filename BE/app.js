@@ -7,8 +7,8 @@ const { getEndpoints } = require('./controllers/getEndpoints.controller');
 const { getSongs, getSongById } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
-const { getUsers, getUsersById, getUsersPlaylists, postUsers } = require('./controllers/users.controller');
-const { getPlaylists, getPlaylistById, getPlaylistSongs, postPlaylists } = require('./controllers/playlist.controller');
+const { getUsers, getUsersById, getUsersPlaylists, postUsers, postPlaylists } = require('./controllers/users.controller');
+const { getPlaylists, getPlaylistById, getPlaylistSongs } = require('./controllers/playlist.controller');
 
 app.use(cors());
 app.use(express.json())
@@ -25,9 +25,7 @@ app.get('/api/playlists/:playlist_id', getPlaylistById)
 app.get('/api/users/:username/playlists', getUsersPlaylists)
 app.get('/api/playlists/:playlist_id/songs', getPlaylistSongs)
 app.post('/api/users', postUsers)
-// app.post('/api/users/:username/playlists', postPlaylists)
-//error handle
-// POST /api/playlists – Create a new playlist
+app.post('/api/users/:username/playlists', postPlaylists)
 
 // POST /api/songs – (Optional) Add a new song manually (if not using YouTube API)
 
