@@ -29,7 +29,18 @@ exports.fetchUsersPlaylists = async (id) => {
             return rows
         })
 }
-exports.createUsers = (username, email, password) => {
+exports.createUsers = async (username, email, password) => {
+
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [username])
+    if (checkUserExists.rows.length > 0) {
+        return Promise.reject({ status: 400, msg: "user already exists" })
+    }
+    const checkEmailExists = await db.query(`select * from users
+        where email=$1`, [email])
+    if (checkEmailExists.rows.length > 0) {
+        return Promise.reject({ status: 400, msg: "email already exists" })
+    }
     return db.query(`insert into users (username, email, password)
         values ($1, $2, $3) returning *`, [username, email, password])
         .then(({ rows }) => {

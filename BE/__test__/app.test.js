@@ -268,4 +268,133 @@ describe('POST /api/users', () => {
                 expect(user).not.toHaveProperty("password")
             })
     })
+    test('400: returns error when user already exists', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 'jess202',
+                email: 'bell@gmail.com',
+                password: 'bell123'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("user already exists")
+            })
+    })
+    test('400: returns error when missing required fields', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 'bell24',
+                email: '',
+                password: 'bell123'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+    })
+    test('400: returns error when invalid email format', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 'bell24',
+                email: 'bellgmail.com',
+                password: 'bell123'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("invalid email format")
+            })
+    })
+    test('400: returns error when password is too short', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 'bell24',
+                email: 'bell@gmail.com',
+                password: '123'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("password must be at least 6 characters long")
+            })
+    })
+    test('400: returns error when username is too short', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 'b',
+                email: 'bell@gmail.com',
+                password: 'bell123'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("username must be between 3 and 20 characters")
+            })
+    })
+    test("400: returns error when keys are missing", () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 'bell24',
+                email: ''
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+    })
+    test('400: rejects whitespace-only fields', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: '   ',
+                email: '   ',
+                password: 'bell123'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+    })
+    test('400: rejects non-string input types', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 12345,
+                email: ['bad@email.com'],
+                password: { pass: "nope" }
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("invalid input types");
+            })
+    })
+    test('400: rejects if username is too long', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 'a'.repeat(21),
+                email: 'bell@gmail.com',
+                password: 'bell123'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("username must be between 3 and 20 characters")
+            })
+    })
+    test('400: rejects if email already exists', () => {
+        return request(app)
+            .post('/api/users')
+            .send({
+                username: 'bell24',
+                email: 'jess202@gmail.com',
+                password: 'bell123'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("email already exists")
+            })
+    })
 })
