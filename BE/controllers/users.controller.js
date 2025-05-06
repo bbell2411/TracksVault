@@ -1,4 +1,4 @@
-const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers } = require("../models/users.model")
+const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers, createPlaylist } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
     fetchUsers().then((users) => {
@@ -55,6 +55,23 @@ exports.postUsers = async (req, res, next) => {
     createUsers(username, email, hashedPassword).then((user) => {
         delete user.password
         res.status(201).send({ user })
+    })
+        .catch((err) => {
+            next(err)
+        })
+}
+
+exports.postPlaylists = (req, res, next) => {
+    const { username } = req.params
+    const { name } = req.body
+    if (name && typeof name !== "string") {
+        return res.status(400).send({ msg: "invalid input types" })
+    }
+    if (!name || name.trim() === '') {
+        return res.status(400).send({ msg: "missing required fields" })
+    }
+    createPlaylist(username, name).then((playlist) => {
+        res.status(201).send({ playlist })
     })
         .catch((err) => {
             next(err)
