@@ -33,6 +33,24 @@ const bcrypt = require("bcrypt")
 
 exports.postUsers = async (req, res, next) => {
     const { username, email, password } = req.body
+    if (!username || !email || !password) {
+        return res.status(400).send({ msg: "missing required fields" })
+    }
+    if (username.length < 3 || username.length > 20) {
+        return Promise.reject({ status: 400, msg: "username must be between 3 and 20 characters" })
+    }
+    if (password.length < 6) {
+        return Promise.reject({ status: 400, msg: "password must be at least 6 characters long" })
+    }
+    if (!/^[a-zA-Z0-9]+$/.test(username)) {
+        return Promise.reject({ status: 400, msg: "missing required fields" })
+    }
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        return Promise.reject({ status: 400, msg: "invalid email format" })
+    }
+    if (typeof username && typeof email && typeof password !== "string") {
+        return Promise.reject({ status: 400, msg: "invalid input types" })
+    }
     const hashedPassword = await bcrypt.hash(password, 10)
     createUsers(username, email, hashedPassword).then((user) => {
         delete user.password

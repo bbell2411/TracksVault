@@ -25,8 +25,8 @@ app.get('/api/playlists/:playlist_id', getPlaylistById)
 app.get('/api/users/:username/playlists', getUsersPlaylists)
 app.get('/api/playlists/:playlist_id/songs', getPlaylistSongs)
 app.post('/api/users', postUsers)
-app.post('/api/playlists', postPlaylists)
-
+// app.post('/api/users/:username/playlists', postPlaylists)
+//error handle
 // POST /api/playlists – Create a new playlist
 
 // POST /api/songs – (Optional) Add a new song manually (if not using YouTube API)

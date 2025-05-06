@@ -27,3 +27,7 @@ exports.getPlaylistSongs = (req, res, next) => {
             next(err)
         })
 }
+
+exports.postPlaylists = (req, res, next) => {
+    
+}
