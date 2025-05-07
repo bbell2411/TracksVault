@@ -41,8 +41,7 @@
 
 ```bash
    git clone https://github.com/bbell2411/TracksVault.git
-   cd TracksVault
-   cd BE
+   cd TracksVault/BE
 ```
 2. **Install dependencies:**
 
