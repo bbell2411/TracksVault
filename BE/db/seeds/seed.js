@@ -41,7 +41,8 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
             return db.query(`CREATE TABLE playlist (
           playlist_id SERIAL PRIMARY KEY,
           name TEXT NOT NULL,
-          user_id VARCHAR(200) REFERENCES users(username)
+          user_id VARCHAR(200) REFERENCES users(username) 
+          ON UPDATE CASCADE
         )`);
         })
         .then(() => {

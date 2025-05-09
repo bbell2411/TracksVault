@@ -91,7 +91,29 @@ exports.addSongs = async (user_id, playlist_id, song_id) => {
                     values ($1, $2) returning *`, [playlist_id, song_id]
     )
         .then(({ rows }) => {
-            console.log(rows)
+            return rows[0]
+        })
+}
+
+exports.patchUsername = async (username, newUsername) => {
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [username])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+
+    const checkNewUserExists = await db.query(`select * from users
+        where username=$1`, [newUsername])
+    if (checkNewUserExists.rows.length > 0) {
+        return Promise.reject({ status: 400, msg: "user already exists" })
+    }
+    
+    return db.query(`UPDATE users 
+        SET username=$1
+         WHERE username=$2
+          RETURNING *`, [newUsername, username])
+        .then(({ rows }) => {
+            console.log('rows')
             return rows[0]
         })
 }

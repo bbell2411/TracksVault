@@ -569,3 +569,105 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             })
     })
 })
+describe('PATCH /api/users/:username', () => {
+    test('200: updates username', () => {
+        return request(app)
+            .patch('/api/users/jess202')
+            .send({
+                new_username: 'jessy202'
+            })
+            .expect(200)
+            .then(({ body: { updated_user } }) => {
+                expect(updated_user.username).toBe('jessy202')
+                expect(updated_user.email).toBe('jess202@gmail.com')
+            })
+    })
+    test('400: returns error when missing required fields', () => {
+        return request(app)
+            .patch('/api/users/jess202')
+            .send({
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: returns error when recieved an empty string', () => {
+        return request(app)
+            .patch('/api/users/jess202')
+            .send({
+                new_username: ''
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: rejects whitespace-only fields', () => {
+        return request(app)
+            .patch('/api/users/jess202')
+            .send({
+                new_username: '   ',
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: rejects invalid input types', () => {
+        return request(app)
+            .patch('/api/users/jess202')
+            .send({
+                new_username: 123
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("invalid input types");
+            })
+    })
+    test('400: rejects if username is too long', () => {
+        return request(app)
+            .patch('/api/users/jess202')
+            .send({
+                new_username: 'a'.repeat(21),
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("username must be between 3 and 20 characters")
+            })
+    })
+    test('400: rejects if username is too short', () => {
+        return request(app)
+            .patch('/api/users/jess202')
+            .send({
+                new_username: 'a',
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("username must be between 3 and 20 characters")
+            })
+    })
+    test('404: returns error if user doesnt exist', () => {
+        return request(app)
+            .patch('/api/users/NOTjess')
+            .send({
+                new_username: 'jessy202'
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+    test('400: returns error if username already exists', () => {
+        return request(app)
+            .patch('/api/users/jess202')
+            .send({
+                new_username: 'jess202'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("user already exists");
+            })
+    })
+    test
+})

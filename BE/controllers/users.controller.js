@@ -1,4 +1,4 @@
-const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers, createPlaylist, addSongs } = require("../models/users.model")
+const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers, createPlaylist, addSongs, patchUsername } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
     fetchUsers().then((users) => {
@@ -83,11 +83,30 @@ exports.postPlaylistSongs = (req, res, next) => {
     if (!song_id) {
         return res.status(400).send({ msg: "missing required fields" })
     }
-    // if (typeof song_id !== "number") {
-    //     return res.status(400).send({ msg: "invalid input types" })
-    // }
     addSongs(username, playlist_id, song_id).then((playlist) => {
         res.status(201).send({ playlist })
+    })
+        .catch((err) => {
+            next(err)
+        })
+}
+exports.updateUsername = (req, res, next) => {
+    const { username } = req.params
+    const { new_username } = req.body
+    if (!new_username) {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    if (new_username.length < 3 || new_username.length > 20) {
+        return Promise.reject({ status: 400, msg: "username must be between 3 and 20 characters" })
+    }
+    if (typeof new_username !== "string") {
+        return Promise.reject({ status: 400, msg: "invalid input types" })
+    }
+    if (new_username.trim() === '') {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    patchUsername(username, new_username).then((updated_user) => {
+        res.status(200).send({ updated_user })
     })
         .catch((err) => {
             next(err)
