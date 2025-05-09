@@ -7,7 +7,7 @@ const { getEndpoints } = require('./controllers/getEndpoints.controller');
 const { getSongs, getSongById } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
-const { getUsers, getUsersById, getUsersPlaylists, postUsers, postPlaylists, postPlaylistSongs } = require('./controllers/users.controller');
+const { getUsers, getUsersById, getUsersPlaylists, postUsers, postPlaylists, postPlaylistSongs, updateUsername } = require('./controllers/users.controller');
 const { getPlaylists, getPlaylistById, getPlaylistSongs } = require('./controllers/playlist.controller');
 
 app.use(cors());
@@ -27,10 +27,9 @@ app.get('/api/playlists/:playlist_id/songs', getPlaylistSongs)
 app.post('/api/users', postUsers)
 app.post('/api/users/:username/playlists', postPlaylists)
 app.post('/api/users/:username/playlists/:playlist_id/songs', postPlaylistSongs)
+app.patch("/api/users/:username", updateUsername)
 
 // POST /api/songs – (Optional) Add a new song manually (if not using YouTube API)
-
-// POST /api/playlists/:playlist_id/songs – Add a song to a playlist
 
 // PATCH /api/playlists/:playlist_id – Rename a playlist
 
