@@ -478,3 +478,94 @@ describe('POST /api/users/:username/playlists', () => {
             })
     })
 })
+
+describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
+    test('201: adds a song to a playlist', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists/1/songs')
+            .send({
+                song_id: 2
+            })
+            .expect(201)
+            .then(({ body: { playlist } }) => {
+                expect(playlist.song_id).toBe(2)
+                expect(playlist.playlist_id).toBe(1)
+            })
+    })
+    test('400: returns error when missing required fields', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists/1/songs')
+            .send({
+                song_id: ''
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+    })
+    test('400: returns error when keys are missing', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists/1/songs')
+            .send({
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+    })
+    test('400: rejects whitespace-only fields', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists/1/songs')
+            .send({
+                song_id: '   ',
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: rejects invalid input types', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists/1/songs')
+            .send({
+                song_id: "random"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request");
+            })
+    })
+    test('404: returns error if user doesnt exist', () => {
+        return request(app)
+            .post('/api/users/NOTjess/playlists/1/songs')
+            .send({
+                song_id: 2
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+    test('404: returns error if playlist doesnt exist', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists/100/songs')
+            .send({
+                song_id: 2
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+    test('404: returns error if song doesnt exist', () => {
+        return request(app)
+            .post('/api/users/jess202/playlists/1/songs')
+            .send({
+                song_id: 100
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+})

@@ -69,3 +69,29 @@ exports.createPlaylist = async (user_id, playlist_name) => {
             return rows[0]
         })
 }
+exports.addSongs = async (user_id, playlist_id, song_id) => {
+    const checkSongExists = await db.query(`select * from songs
+        where song_id=$1`, [song_id])
+    if (checkSongExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+
+    const checkUserExists = await db.query(`select * from users
+            where username=$1`, [user_id])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+
+    const checkPlaylistExists = await db.query(`select * from playlist
+                where playlist_id=$1`, [playlist_id])
+    if (checkPlaylistExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    return db.query(`insert into playlist_songs (playlist_id, song_id)
+                    values ($1, $2) returning *`, [playlist_id, song_id]
+    )
+        .then(({ rows }) => {
+            console.log(rows)
+            return rows[0]
+        })
+}
