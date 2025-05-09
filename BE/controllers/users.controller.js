@@ -1,4 +1,4 @@
-const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers, createPlaylist } = require("../models/users.model")
+const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers, createPlaylist, addSongs } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
     fetchUsers().then((users) => {
@@ -71,6 +71,22 @@ exports.postPlaylists = (req, res, next) => {
         return res.status(400).send({ msg: "missing required fields" })
     }
     createPlaylist(username, name).then((playlist) => {
+        res.status(201).send({ playlist })
+    })
+        .catch((err) => {
+            next(err)
+        })
+}
+exports.postPlaylistSongs = (req, res, next) => {
+    const { username, playlist_id } = req.params
+    const { song_id } = req.body
+    if (!song_id) {
+        return res.status(400).send({ msg: "missing required fields" })
+    }
+    // if (typeof song_id !== "number") {
+    //     return res.status(400).send({ msg: "invalid input types" })
+    // }
+    addSongs(username, playlist_id, song_id).then((playlist) => {
         res.status(201).send({ playlist })
     })
         .catch((err) => {
