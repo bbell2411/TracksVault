@@ -107,13 +107,31 @@ exports.patchUsername = async (username, newUsername) => {
     if (checkNewUserExists.rows.length > 0) {
         return Promise.reject({ status: 400, msg: "user already exists" })
     }
-    
+
     return db.query(`UPDATE users 
         SET username=$1
          WHERE username=$2
           RETURNING *`, [newUsername, username])
         .then(({ rows }) => {
-            console.log('rows')
+            return rows[0]
+        })
+}
+exports.patchPlaylistName = async (username, playlist_id, newPlaylistName) => {
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [username])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    const checkPlaylistExists = await db.query(`select * from playlist
+        where playlist_id=$1`, [playlist_id])
+    if (checkPlaylistExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    return db.query(`UPDATE playlist 
+        SET name=$1
+         WHERE playlist_id=$2
+          RETURNING *`, [newPlaylistName, playlist_id])
+        .then(({ rows }) => {
             return rows[0]
         })
 }

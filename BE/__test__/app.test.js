@@ -669,5 +669,84 @@ describe('PATCH /api/users/:username', () => {
                 expect(body.msg).toBe("user already exists");
             })
     })
-    test
+})
+describe('PATCH /api/users/:username/playlists/:playlist_id', () => {
+    test('200: updates playlist name', () => {
+        return request(app)
+            .patch('/api/users/jess202/playlists/1')
+            .send({
+                new_playlist_name: 'My Playlist'
+            })
+            .expect(200)
+            .then(({ body: { updated_playlist } }) => {
+                expect(updated_playlist.name).toBe('My Playlist')
+                expect(updated_playlist.playlist_id).toBe(1)
+                expect(updated_playlist.user_id).toBe('jess202')
+            })
+    })
+    test('400: returns error when missing required fields', () => {
+        return request(app)
+            .patch('/api/users/jess202/playlists/1')
+            .send({
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: returns error when recieved an empty string', () => {
+        return request(app)
+            .patch('/api/users/jess202/playlists/1')
+            .send({
+                new_playlist_name: ''
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: rejects whitespace-only fields', () => {
+        return request(app)
+            .patch('/api/users/jess202/playlists/1')
+            .send({
+                new_playlist_name: '   ',
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: rejects invalid input types', () => {
+        return request(app)
+            .patch('/api/users/jess202/playlists/1')
+            .send({
+                new_playlist_name: 123
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request");
+            })
+    })
+    test('404: returns error if user doesnt exist', () => {
+        return request(app)
+            .patch('/api/users/NOTjess/playlists/1')
+            .send({
+                new_playlist_name: 'My Playlist'
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+    test('404: returns error if playlist doesnt exist', () => {
+        return request(app)
+            .patch('/api/users/jess202/playlists/100')
+            .send({
+                new_playlist_name: 'My Playlist'
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
 })

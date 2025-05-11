@@ -7,7 +7,7 @@ const { getEndpoints } = require('./controllers/getEndpoints.controller');
 const { getSongs, getSongById } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
-const { getUsers, getUsersById, getUsersPlaylists, postUsers, postPlaylists, postPlaylistSongs, updateUsername } = require('./controllers/users.controller');
+const { getUsers, getUsersById, getUsersPlaylists, postUsers, postPlaylists, postPlaylistSongs, updateUsername, updatePLaylistName} = require('./controllers/users.controller');
 const { getPlaylists, getPlaylistById, getPlaylistSongs } = require('./controllers/playlist.controller');
 
 app.use(cors());
@@ -28,14 +28,13 @@ app.post('/api/users', postUsers)
 app.post('/api/users/:username/playlists', postPlaylists)
 app.post('/api/users/:username/playlists/:playlist_id/songs', postPlaylistSongs)
 app.patch("/api/users/:username", updateUsername)
+app.patch('/api/users/:username/playlists/:playlist_id', updatePLaylistName)
 
-// POST /api/songs – (Optional) Add a new song manually (if not using YouTube API)
+// POST /api/songs (or patch) – (Optional) Add a new song manually (if not using YouTube API)
 
-// PATCH /api/playlists/:playlist_id – Rename a playlist
+// PATCH /api/playlists/:playlist_id – Rename a playlist NEXT
 
 // PATCH /api/users/:username – Update user email or details
-
-// PATCH /api/songs/:song_id – Update song info (if editable)
 
 // DELETE /api/playlists/:playlist_id – Delete a playlist
 
@@ -64,7 +63,6 @@ module.exports = app
 //api call for /api/songs/:artist_id/songs ?? (+/:song_id, idk ask)
 //see how we can add songs to database with post requests 
 //delete 
-// patch(for playlists?) (ask if we need another table)
 //is yt api used in be or fe? (ask)
 //LISTEN FILE?!?!?!
 
