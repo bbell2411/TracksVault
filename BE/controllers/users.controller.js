@@ -1,4 +1,6 @@
-const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers, createPlaylist, addSongs, patchUsername, patchPlaylistName } = require("../models/users.model")
+const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists,
+    createUsers, createPlaylist, addSongs,
+    patchUsername, patchPlaylistName, patchUserEmail} = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
     fetchUsers().then((users) => {
@@ -124,9 +126,27 @@ exports.updatePLaylistName = (req, res, next) => {
     if (new_playlist_name.trim() === '') {
         return res.status(400).send({ msg: "bad request" })
     }
-    console.log("hello")
     patchPlaylistName(username, playlist_id, new_playlist_name).then((updated_playlist) => {
         res.status(200).send({ updated_playlist })
+    })
+        .catch((err) => {
+            next(err)
+        })
+}
+exports.updateUserEmail = (req, res, next) => {
+    const { username } = req.params
+    const { email } = req.body
+    if (!email) {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    if (typeof email !== "string") {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    patchUserEmail(username, email).then((updated_user) => {
+        res.status(200).send({ updated_user })
     })
         .catch((err) => {
             next(err)

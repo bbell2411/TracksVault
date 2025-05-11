@@ -7,7 +7,9 @@ const { getEndpoints } = require('./controllers/getEndpoints.controller');
 const { getSongs, getSongById } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
-const { getUsers, getUsersById, getUsersPlaylists, postUsers, postPlaylists, postPlaylistSongs, updateUsername, updatePLaylistName} = require('./controllers/users.controller');
+const { getUsers, getUsersById, getUsersPlaylists,
+    postUsers, postPlaylists, postPlaylistSongs,
+    updateUsername, updatePLaylistName, updateUserEmail } = require('./controllers/users.controller');
 const { getPlaylists, getPlaylistById, getPlaylistSongs } = require('./controllers/playlist.controller');
 
 app.use(cors());
@@ -29,10 +31,8 @@ app.post('/api/users/:username/playlists', postPlaylists)
 app.post('/api/users/:username/playlists/:playlist_id/songs', postPlaylistSongs)
 app.patch("/api/users/:username", updateUsername)
 app.patch('/api/users/:username/playlists/:playlist_id', updatePLaylistName)
-
+app.patch('/api/users/:username/email', updateUserEmail)
 // POST /api/songs (or patch) – (Optional) Add a new song manually (if not using YouTube API)
-
-// PATCH /api/playlists/:playlist_id – Rename a playlist NEXT
 
 // PATCH /api/users/:username – Update user email or details
 
