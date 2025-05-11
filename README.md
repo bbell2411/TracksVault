@@ -53,7 +53,7 @@ Create 2 .env files in root:
 
 **.env.test**
  ```env
-   PGDATABASE=trackvault_test
+ PGDATABASE=trackvault_test
  ```
 **.env.development**
 ```env
