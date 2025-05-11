@@ -1,4 +1,4 @@
-const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers, createPlaylist, addSongs, patchUsername } = require("../models/users.model")
+const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists, createUsers, createPlaylist, addSongs, patchUsername, patchPlaylistName } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
     fetchUsers().then((users) => {
@@ -107,6 +107,26 @@ exports.updateUsername = (req, res, next) => {
     }
     patchUsername(username, new_username).then((updated_user) => {
         res.status(200).send({ updated_user })
+    })
+        .catch((err) => {
+            next(err)
+        })
+}
+exports.updatePLaylistName = (req, res, next) => {
+    const { username, playlist_id } = req.params
+    const { new_playlist_name } = req.body
+    if (!new_playlist_name) {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    if (typeof new_playlist_name !== "string") {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    if (new_playlist_name.trim() === '') {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    console.log("hello")
+    patchPlaylistName(username, playlist_id, new_playlist_name).then((updated_playlist) => {
+        res.status(200).send({ updated_playlist })
     })
         .catch((err) => {
             next(err)
