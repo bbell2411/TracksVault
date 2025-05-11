@@ -750,3 +750,88 @@ describe('PATCH /api/users/:username/playlists/:playlist_id', () => {
             })
     })
 })
+describe('PATCH /api/users/:username/email', () => {
+    test('200: updates user email', () => {
+        return request(app)
+            .patch('/api/users/jess202/email')
+            .send({
+                email: 'newjess@gmail.com'
+            })
+    })
+    test('400: returns error when missing required fields', () => {
+        return request(app)
+            .patch('/api/users/jess202/email')
+            .send({
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: returns error when recieved an empty string', () => {
+        return request(app)
+            .patch('/api/users/jess202/email')
+            .send({
+                email: ''
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: rejects whitespace-only fields', () => {
+        return request(app)
+            .patch('/api/users/jess202/email')
+            .send({
+                email: '   ',
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: rejects invalid input types', () => {
+        return request(app)
+            .patch('/api/users/jess202/email')
+            .send({
+                email: 123
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request");
+            })
+    })
+    test('404: returns error if user doesnt exist', () => {
+        return request(app)
+            .patch('/api/users/NOTjess/email')
+            .send({
+                email: 'newjess@gmail.com'
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+    test('400: returns error if email already exists', () => {
+        return request(app)
+            .patch('/api/users/jess202/email')
+            .send({
+                email: 'jess202@gmail.com'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("email already exists");
+            })
+    })
+    test('400: returns error if email is invalid', () => {
+        return request(app)
+            .patch('/api/users/jess202/email')
+            .send({
+                email: 'jess202gmail.com'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request");
+            })
+    })
+})
