@@ -1,5 +1,6 @@
 const db = require("../connection")
 const format = require('pg-format')
+const bcrypt = require("bcrypt")
 const { formatSongs, playlistLookup, songsLookup } = require('../seeds/utils')
 
 const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs }) => {
@@ -27,7 +28,7 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
             return db.query(`CREATE TABLE songs (
             song_id serial primary key,
             song_name text not null,
-           artist INT REFERENCES artists(artist_id) not null,
+            artist INT REFERENCES artists(artist_id) not null,
             link text
             )`)
         })
@@ -76,10 +77,11 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
         .then((insertedSongsData) => {
             insertedSongs = insertedSongsData.rows
             const nestedArray = usersData.map((user) => {
-                return [user.username, user.email, user.password]
+                const hashed = bcrypt.hashSync(user.password, 10)
+                return [user.username, user.email, hashed]
             })
             const sql = format(`insert into users 
-            (username, email,password)
+            (username, email, password)
             values 
             %L
             returning *`, nestedArray)
@@ -112,7 +114,4 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
         })
 
 }
-// 
-// change later to hash user passwords
-
 module.exports = seed

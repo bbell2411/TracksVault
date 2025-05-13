@@ -139,18 +139,40 @@ exports.patchPlaylistName = async (username, playlist_id, newPlaylistName) => {
 exports.patchUserEmail = async (username, email) => {
     const checkUserExists = await db.query(`select * from users
         where username=$1`, [username])
-        if (checkUserExists.rows.length === 0) {
-            return Promise.reject({ status: 404, msg: "not found" })
-        }
-        const checkEmailExists = await db.query(`select * from users
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    const checkEmailExists = await db.query(`select * from users
             where email=$1`, [email])
-            if (checkEmailExists.rows.length > 0) {
-                return Promise.reject({ status: 400, msg: "email already exists" })
-            }
+    if (checkEmailExists.rows.length > 0) {
+        return Promise.reject({ status: 400, msg: "email already exists" })
+    }
     return db.query(`UPDATE users 
         SET email=$1
          WHERE username=$2
           RETURNING *`, [email, username])
+        .then(({ rows }) => {
+            return rows[0]
+        })
+}
+const bcrypt = require('bcrypt')
+
+exports.patchUserPassword = async (username, oldPass, password) => {
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [username])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    const user = checkUserExists.rows[0]
+
+    const isMatch = await bcrypt.compare(oldPass, user.password)
+    if (!isMatch) {
+        return Promise.reject({ status: 401, msg: "incorrect old password" })
+    }
+    return db.query(`UPDATE users 
+        SET password=$1
+         WHERE username=$2
+          RETURNING *`, [password, username])
         .then(({ rows }) => {
             return rows[0]
         })

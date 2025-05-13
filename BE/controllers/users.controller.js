@@ -1,6 +1,6 @@
 const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists,
     createUsers, createPlaylist, addSongs,
-    patchUsername, patchPlaylistName, patchUserEmail} = require("../models/users.model")
+    patchUsername, patchPlaylistName, patchUserEmail, patchUserPassword } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
     fetchUsers().then((users) => {
@@ -151,4 +151,29 @@ exports.updateUserEmail = (req, res, next) => {
         .catch((err) => {
             next(err)
         })
+}
+exports.updateUserPassword = (req, res, next) => {
+    const { username } = req.params
+    const { old_password, new_password } = req.body
+    if (!old_password || !new_password) {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    if (typeof old_password !== "string" || typeof new_password !== "string") {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    if (old_password.trim() === '' || new_password.trim() === '') {
+        return res.status(400).send({ msg: "bad request" })
+    }
+    if (new_password.length < 6) {
+        return res.status(400).send({msg: "password must be at least 6 characters long" })
+    }
+    bcrypt.hash(new_password, 10).then((hashedPassword) => {
+        patchUserPassword(username,old_password, hashedPassword).then((updated_user) => {
+            delete updated_user.password
+            res.status(200).send({ updated_user })
+        })
+        .catch((err) => {
+            next(err)
+        })
+    })
 }

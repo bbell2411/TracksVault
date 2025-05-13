@@ -835,3 +835,100 @@ describe('PATCH /api/users/:username/email', () => {
             })
     })
 })
+describe('PATCH /api/users/:username/password', () => {
+    test('200: updates user password', () => {
+        return request(app)
+            .patch('/api/users/jess202/password')
+            .send({
+                old_password: 'Jess2010',
+                new_password: 'newpassword'
+            })
+            .expect(200)
+            .then(({ body: { updated_user } }) => {
+                expect(updated_user.username).toBe('jess202')
+                expect(updated_user).not.toHaveProperty("password")
+            })
+    })
+    test('401: error message if user\'s old password is incorrect', () => {
+        return request(app)
+            .patch('/api/users/jess202/password')
+            .send({
+                old_password: 'wrongpassword',
+                new_password: 'newpassword'
+            })
+            .expect(401)
+            .then(({ body }) => {
+                expect(body.msg).toBe("incorrect old password")
+            })
+    })
+    test('400: returns error when missing required fields', () => {
+        return request(app)
+            .patch('/api/users/jess202/password')
+            .send({
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: returns error when recieved an empty string', () => {
+        return request(app)
+            .patch('/api/users/jess202/password')
+            .send({
+                old_password: 'Jess2010',
+                new_password: ''
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: rejects whitespace-only fields', () => {
+        return request(app)
+            .patch('/api/users/jess202/password')
+            .send({
+                old_password: 'Jess2010',
+                new_password: '   ',
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: rejects invalid input types', () => {
+        return request(app)
+            .patch('/api/users/jess202/password')
+            .send({
+                old_password: 'Jess2010',
+                new_password: 123
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request");
+            })
+    })
+    test('404: returns error if user doesnt exist', () => {
+        return request(app)
+            .patch('/api/users/NOTjess/password')
+            .send({
+                old_password: 'Jess2010',
+                new_password: 'newpassword'
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+    test('400: returns error if password is too short', () => {
+        return request(app)
+            .patch('/api/users/jess202/password')
+            .send({
+                old_password: 'Jess2010',
+                new_password: '123'
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("password must be at least 6 characters long");
+            })
+    })
+})
