@@ -44,7 +44,7 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
           playlist_id SERIAL PRIMARY KEY,
           name TEXT NOT NULL,
           user_id VARCHAR(200) REFERENCES users(username) 
-          ON UPDATE CASCADE,
+          ON UPDATE CASCADE on delete cascade,
           avatar_url TEXT
         )`);
         })
