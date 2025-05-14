@@ -177,3 +177,26 @@ exports.patchUserPassword = async (username, oldPass, password) => {
             return rows[0]
         })
 }
+
+exports.terminatePlaylist = async (username, playlist_id) => {
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [username])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    const checkPlaylistExists = await db.query(`select * from playlist
+        where playlist_id=$1`, [playlist_id])
+    if (checkPlaylistExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    return db.query(`delete from playlist
+        where playlist_id=$1
+        AND user_id=$2
+        returning *`, [playlist_id, username])
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+                return Promise.reject({ status: 404, msg: "not found" })
+            }
+            return rows[0]
+        })
+}
