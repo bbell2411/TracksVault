@@ -42,7 +42,6 @@ app.delete('/api/users/:username', deleteUsers)
 
 // DELETE /api/playlists/:playlist_id/songs/:song_id – Remove a song from a playlist
 
-// DELETE /api/users/:username – Delete a user (optional)
 
 
 // GET /api/search?song=drake – Search for songs by name or artist

@@ -112,5 +112,102 @@
                 }
             ]
         }
+    },
+  "POST /api/users": {
+    "description": "Creates a new user.",
+    "exampleRequest": {
+      "username": "jess202",
+      "email": "jess@example.com",
+      "password": "securepassword"
+    },
+    "exampleResponse": {
+      "user": {
+        "username": "jess202",
+        "email": "jess@example.com"
+      }
     }
+  },
+  "POST /api/users/:username/playlists": {
+    "description": "Creates a new playlist for a specific user.",
+    "exampleRequest": {
+      "name": "Chill Vibes"
+    },
+    "exampleResponse": {
+      "playlist": {
+        "playlist_id": 1,
+        "name": "Chill Vibes",
+        "user_id": "jess202"
+      }
+    }
+  },
+  "POST /api/users/:username/playlists/:playlist_id/songs": {
+    "description": "Adds a song to a specific user's playlist.",
+    "exampleRequest": {
+      "song_id": 1
+    },
+    "exampleResponse": {
+      "playlist_song": {
+        "playlist_id": 1,
+        "song_id": 1
+      }
+    }
+  },
+  "PATCH /api/users/:username": {
+    "description": "Updates a user's username.",
+    "exampleRequest": {
+      "newUsername": "jessie_22"
+    },
+    "exampleResponse": {
+      "user": {
+        "oldUsername": "jess202",
+        "newUsername": "jessie_22"
+      }
+    }
+  },
+  "PATCH /api/users/:username/playlists/:playlist_id": {
+    "description": "Updates the name of a user's playlist.",
+    "exampleRequest": {
+      "name": "Workout Hits"
+    },
+    "exampleResponse": {
+      "playlist": {
+        "playlist_id": 1,
+        "name": "Workout Hits"
+      }
+    }
+  },
+  "PATCH /api/users/:username/email": {
+    "description": "Updates a user's email address.",
+    "exampleRequest": {
+      "email": "newemail@example.com"
+    },
+    "exampleResponse": {
+      "user": {
+        "username": "jess202",
+        "email": "newemail@example.com"
+      }
+    }
+  },
+  "PATCH /api/users/:username/password": {
+    "description": "Updates a user's password.",
+    "exampleRequest": {
+      "oldPassword": "oldpass123",
+      "newPassword": "newsecurepass456"
+    },
+    "exampleResponse": {
+      "msg": "Password updated successfully"
+    }
+  },
+  "DELETE /api/users/:username/playlists/:playlist_id": {
+    "description": "Deletes a user's playlist.",
+    "exampleResponse": {
+      "msg": "Playlist deleted successfully"
+    }
+  },
+  "DELETE /api/users/:username": {
+    "description": "Deletes a user and all related data.",
+    "exampleResponse": {
+      "msg": "User deleted successfully"
+    }
+  }
 }
