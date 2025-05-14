@@ -35,8 +35,6 @@ app.patch('/api/users/:username/email', updateUserEmail)
 app.patch('/api/users/:username/password', updateUserPassword)
 // POST /api/songs (or patch) – (Optional) Add a new song manually (if not using YouTube API)
 
-// PATCH /api/users/:username – Update user email or details
-
 // DELETE /api/playlists/:playlist_id – Delete a playlist
 
 // DELETE /api/songs/:song_id – Delete a song (optional, if manually added)
