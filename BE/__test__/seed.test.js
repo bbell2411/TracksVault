@@ -168,6 +168,18 @@ describe('seed', () => {
                     expect(column.data_type).toBe('text');
                 })
         })
+        test('users table has avatar_url as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'users'
+                        AND column_name = 'avatar_url';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('avatar_url');
+                    expect(column.data_type).toBe('text');
+                })
+        })
     })
    describe('playlist table', () => {
         test('playlist table exists', () => {
@@ -220,6 +232,18 @@ describe('seed', () => {
                 .then(({ rows: [column] }) => {
                     expect(column.column_name).toBe('user_id');
                     expect(column.data_type).toBe('character varying');
+                })
+        })
+        test('playlist table has avatar_url as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'playlist'
+                        AND column_name = 'avatar_url';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('avatar_url');
+                    expect(column.data_type).toBe('text');
                 })
         })
     })

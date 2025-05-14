@@ -36,14 +36,16 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
             return db.query(`create table users (
             username varchar(200) primary key,
             email text unique not null,
-            password text not null)`)
+            password text not null,
+            avatar_url text)`)
         })
         .then(() => {
             return db.query(`CREATE TABLE playlist (
           playlist_id SERIAL PRIMARY KEY,
           name TEXT NOT NULL,
           user_id VARCHAR(200) REFERENCES users(username) 
-          ON UPDATE CASCADE
+          ON UPDATE CASCADE,
+          avatar_url TEXT
         )`);
         })
         .then(() => {
@@ -78,10 +80,10 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
             insertedSongs = insertedSongsData.rows
             return Promise.all(usersData.map(async (user) => {
                 const hashed = await bcrypt.hash(user.password, 10)
-                return [user.username, user.email, hashed]
+                return [user.username, user.email, hashed, user.avatar_url]
             })).then((nestedArray) => {
                 const sql = format(`insert into users 
-                (username, email, password)
+                (username, email, password, avatar_url)
                 values 
                 %L
                  ON CONFLICT (username) DO NOTHING
@@ -91,10 +93,10 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
         })
         .then(() => {
             const nestedArray = playlistData.map((playlist) => {
-                return [playlist.name, playlist.username]
+                return [playlist.name, playlist.username, playlist.avatar_url]
             })
             const sql = format(`insert into playlist
-                (name, user_id)
+                (name, user_id, avatar_url)
                 values
                 %L
                 returning *`, nestedArray)
