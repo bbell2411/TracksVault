@@ -931,3 +931,30 @@ describe('PATCH /api/users/:username/password', () => {
             })
     })
 })
+describe('DELETE /api/users/:username/playlists/:playlist_id', () => {
+    test('204: deletes user', () => {
+        return request(app)
+            .delete('/api/users/jess202/playlists/1')
+            .expect(204)
+            .then(({ body }) => {
+                expect(body).toEqual({})
+            })
+    })
+    test('404: returns error if user doesnt exist', () => {
+        return request(app)
+            .delete('/api/users/NOTjess/playlists/1')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+    test('404: returns error if playlist doesnt exist', () => {
+        return request(app)
+            .delete('/api/users/jess202/playlists/100')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
+
+})

@@ -2,7 +2,7 @@ module.exports=[
     {
         name:"playlist1",
         username:"jess202",
-        avatar_urk:"https://i.pinimg.com/736x/c4/dd/a4/c4dda4adc789d97a96095973e6129251.jpg"
+        avatar_url:"https://i.pinimg.com/736x/c4/dd/a4/c4dda4adc789d97a96095973e6129251.jpg"
     },
     {
         name:"playlist2",
