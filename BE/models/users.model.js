@@ -200,3 +200,14 @@ exports.terminatePlaylist = async (username, playlist_id) => {
             return rows[0]
         })
 }
+exports.terminateUsers = async (username) => {
+    return db.query(`delete from users
+        where username=$1
+        returning *`, [username])
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+                return Promise.reject({ status: 404, msg: "not found" })
+            }
+            return rows[0]
+        })
+}

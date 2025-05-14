@@ -956,5 +956,31 @@ describe('DELETE /api/users/:username/playlists/:playlist_id', () => {
                 expect(body.msg).toBe("not found");
             })
     })
+    test("400: returns error if playlist_id is not a number", () => {
+        return request(app)
+            .delete('/api/users/jess202/playlists/playlist1')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request");
+            })
+    })
 
+})
+describe('DELETE /api/users/:username', () => {
+    test('204: deletes user', () => {
+        return request(app)
+            .delete('/api/users/jess202')
+            .expect(204)
+            .then(({ body }) => {
+                expect(body).toEqual({})
+            })
+    })
+    test('404: returns error if user doesnt exist', () => {
+        return request(app)
+            .delete('/api/users/NOTjess')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found");
+            })
+    })
 })
