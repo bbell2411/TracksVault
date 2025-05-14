@@ -7,7 +7,7 @@ module.exports = [
     },
     {
         song_name:"Gata Only",
-        artist:"FloyyMenor, Cris MJ",
+        artist:"FloyyMenor",
         link:"https://www.youtube.com/watch?v=-r687V8yqKY"
     },
     {
