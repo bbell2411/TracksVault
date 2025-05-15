@@ -1,7 +1,7 @@
 const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists,
     createUsers, createPlaylist, addSongs,
     patchUsername, patchPlaylistName, patchUserEmail, patchUserPassword,
-    terminatePlaylist, terminateUsers } = require("../models/users.model")
+    terminatePlaylist, terminateUsers, terminatePlaylistSongs } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
     fetchUsers().then((users) => {
@@ -190,6 +190,15 @@ exports.deletePlaylist = (req, res, next) => {
 exports.deleteUsers = (req, res, next) => {
     const { username } = req.params
     terminateUsers(username).then((deleted_user) => {
+        res.status(204).send({})
+    })
+        .catch((err) => {
+            next(err)
+        })
+}
+exports.deletePlaylistSongs = (req, res, next) => {
+    const { username, playlist_id, song_id } = req.params
+    terminatePlaylistSongs(username, playlist_id, song_id).then((deleted_song) => {
         res.status(204).send({})
     })
         .catch((err) => {
