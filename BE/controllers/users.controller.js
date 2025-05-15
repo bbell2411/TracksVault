@@ -81,17 +81,24 @@ exports.postPlaylists = (req, res, next) => {
         })
 }
 exports.postPlaylistSongs = (req, res, next) => {
-    const { username, playlist_id } = req.params
-    const { song_id } = req.body
-    if (!song_id) {
-        return res.status(400).send({ msg: "missing required fields" })
+    const { username, playlist_id } = req.params;
+    const { song_name, artist, link } = req.body;
+
+    if (!song_name || !artist || !link) {
+        return res.status(400).send({ msg: "missing required fields" });
     }
-    addSongs(username, playlist_id, song_id).then((playlist) => {
-        res.status(201).send({ playlist })
-    })
-        .catch((err) => {
-            next(err)
+    if (typeof song_name !== "string" || typeof artist !== "string" || typeof link !== "string") {
+        return res.status(400).send({ msg: "invalid input types" });
+    }
+    if (song_name.trim() === '' || artist.trim() === '' || link.trim() === '') {
+        return res.status(400).send({ msg: "missing required fields" });
+    }
+
+    addSongs(username, playlist_id, song_name, artist, link)
+        .then((playlistSong) => {
+            res.status(201).send({ playlistSong });
         })
+        .catch(next);
 }
 exports.updateUsername = (req, res, next) => {
     const { username } = req.params
