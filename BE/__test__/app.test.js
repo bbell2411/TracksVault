@@ -483,19 +483,20 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
         return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
-                song_id: 2
+                song_name: "bells cool song",
+                artist: "bell",
+                link: "https://www.youtube.com/watch?v=bell"
             })
             .expect(201)
-            .then(({ body: { playlist } }) => {
-                expect(playlist.song_id).toBe(2)
-                expect(playlist.playlist_id).toBe(1)
+            .then(({ body: { playlistSong } }) => {
+                expect(playlistSong.song_id).toBe(3)
+                expect(playlistSong.playlist_id).toBe(1)
             })
     })
     test('400: returns error when missing required fields', () => {
         return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
-                song_id: ''
             })
             .expect(400)
             .then(({ body }) => {
@@ -506,6 +507,7 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
         return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
+                song_name: 'bells cool song'
             })
             .expect(400)
             .then(({ body }) => {
@@ -517,28 +519,34 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .post('/api/users/jess202/playlists/1/songs')
             .send({
                 song_id: '   ',
+                song_name: '   ',
+                artist: '   ',
             })
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("bad request")
+                expect(body.msg).toBe("missing required fields")
             })
     })
     test('400: rejects invalid input types', () => {
         return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
-                song_id: "random"
+                song_name: 123,
+                artist: 123,
+                link: 123
             })
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("bad request");
+                expect(body.msg).toBe("invalid input types");
             })
     })
     test('404: returns error if user doesnt exist', () => {
         return request(app)
             .post('/api/users/NOTjess/playlists/1/songs')
             .send({
-                song_id: 2
+                song_name: "bells cool song",
+                artist: "bell",
+                link: "https://www.youtube.com/watch?v=bell"
             })
             .expect(404)
             .then(({ body }) => {
@@ -549,24 +557,16 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
         return request(app)
             .post('/api/users/jess202/playlists/100/songs')
             .send({
-                song_id: 2
+                song_name: "bells cool song",
+                artist: "bell",
+                link: "https://www.youtube.com/watch?v=bell"
             })
             .expect(404)
             .then(({ body }) => {
-                expect(body.msg).toBe("not found");
+                expect(body.msg).toBe("playlist not found");
             })
     })
-    test('404: returns error if song doesnt exist', () => {
-        return request(app)
-            .post('/api/users/jess202/playlists/1/songs')
-            .send({
-                song_id: 100
-            })
-            .expect(404)
-            .then(({ body }) => {
-                expect(body.msg).toBe("not found");
-            })
-    })
+
 })
 describe('PATCH /api/users/:username', () => {
     test('200: updates username', () => {

@@ -69,30 +69,53 @@ exports.createPlaylist = async (user_id, playlist_name) => {
             return rows[0]
         })
 }
-exports.addSongs = async (user_id, playlist_id, song_id) => {
-    const checkSongExists = await db.query(`select * from songs
-        where song_id=$1`, [song_id])
-    if (checkSongExists.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "not found" })
+exports.addSongs = async (username, playlist_id, song_name, artistName, link) => {
+    const user = await db.query(`SELECT * FROM users WHERE username = $1`, [username]);
+    if (user.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" });
     }
-
-    const checkUserExists = await db.query(`select * from users
-            where username=$1`, [user_id])
-    if (checkUserExists.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "not found" })
+    
+    const playlist = await db.query(`SELECT * FROM playlist WHERE playlist_id = $1`, [playlist_id]);
+    if (playlist.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "playlist not found" });
     }
-
-    const checkPlaylistExists = await db.query(`select * from playlist
-                where playlist_id=$1`, [playlist_id])
-    if (checkPlaylistExists.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "not found" })
+    
+    let artistId;
+    const artist = await db.query(`SELECT * FROM artists WHERE artists_name = $1`, [artistName]);
+    if (artist.rows.length === 0) {
+        const inserted = await db.query(
+            `INSERT INTO artists (artists_name) VALUES ($1) RETURNING artist_id`,
+            [artistName]
+        );
+        artistId = inserted.rows[0].artist_id;
+    } else {
+        artistId = artist.rows[0].artist_id;
     }
-    return db.query(`insert into playlist_songs (playlist_id, song_id)
-                    values ($1, $2) returning *`, [playlist_id, song_id]
+    
+    let songId;
+    const song = await db.query(`SELECT * FROM songs WHERE link = $1`, [link]);
+    if (song.rows.length === 0) {
+        const insertedSong = await db.query(
+            `INSERT INTO songs (song_name, link, artist) VALUES ($1, $2, $3) RETURNING song_id`,
+            [song_name, link, artistId]
+        );
+        songId = insertedSong.rows[0].song_id;
+    } else {
+        songId = song.rows[0].song_id;
+    }
+    const exists = await db.query(
+        `SELECT * FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2`,
+        [playlist_id, songId]
     )
-        .then(({ rows }) => {
-            return rows[0]
-        })
+    if (exists.rows.length > 0) {
+        return Promise.reject({ status: 409, msg: "Song already in playlist" });
+    }
+    const result = await db.query(
+        `INSERT INTO playlist_songs (playlist_id, song_id) VALUES ($1, $2) RETURNING *`,
+        [playlist_id, songId]
+    )
+    
+    return result.rows[0];
 }
 
 exports.patchUsername = async (username, newUsername) => {
