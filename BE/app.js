@@ -10,7 +10,7 @@ const { getArtists, getArtistsById } = require('./controllers/artists.controller
 const { getUsers, getUsersById, getUsersPlaylists,
     postUsers, postPlaylists, postPlaylistSongs,
     updateUsername, updatePLaylistName, updateUserEmail, updateUserPassword,
-    deletePlaylist, deleteUsers } = require('./controllers/users.controller');
+    deletePlaylist, deleteUsers, deletePlaylistSongs } = require('./controllers/users.controller');
 const { getPlaylists, getPlaylistById, getPlaylistSongs } = require('./controllers/playlist.controller');
 
 app.use(cors());
@@ -36,12 +36,13 @@ app.patch('/api/users/:username/email', updateUserEmail)
 app.patch('/api/users/:username/password', updateUserPassword)
 app.delete("/api/users/:username/playlists/:playlist_id", deletePlaylist)
 app.delete('/api/users/:username', deleteUsers)
+app.delete('/api/users/:username/playlists/:playlist_id/songs/:song_id', deletePlaylistSongs)
+//focus on the one below! :)
 // POST /api/songs (or patch) – (Optional) Add a new song manually (if not using YouTube API)
 
 // DELETE /api/songs/:song_id – Delete a song (optional, if manually added)
 
 // DELETE /api/playlists/:playlist_id/songs/:song_id – Remove a song from a playlist
-
 
 
 // GET /api/search?song=drake – Search for songs by name or artist

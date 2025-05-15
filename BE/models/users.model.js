@@ -211,3 +211,24 @@ exports.terminateUsers = async (username) => {
             return rows[0]
         })
 }
+exports.terminatePlaylistSongs = async (username, playlist_id, song_id) => {
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [username])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    const checkPlaylistExists = await db.query(`select * from playlist
+        where playlist_id=$1`, [playlist_id])
+    if (checkPlaylistExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    const checkSongExists = await db.query(`select * from songs
+        where song_id=$1`, [song_id])
+    if (checkSongExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    return db.query(`delete from playlist_songs
+        where playlist_id=$1
+        AND song_id=$2
+        returning *`, [playlist_id, song_id])
+}
