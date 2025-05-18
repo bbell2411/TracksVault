@@ -74,12 +74,12 @@ exports.addSongs = async (username, playlist_id, song_name, artistName, link) =>
     if (user.rows.length === 0) {
         return Promise.reject({ status: 404, msg: "not found" });
     }
-    
+
     const playlist = await db.query(`SELECT * FROM playlist WHERE playlist_id = $1`, [playlist_id]);
     if (playlist.rows.length === 0) {
         return Promise.reject({ status: 404, msg: "playlist not found" });
     }
-    
+
     let artistId;
     const artist = await db.query(`SELECT * FROM artists WHERE artists_name = $1`, [artistName]);
     if (artist.rows.length === 0) {
@@ -91,7 +91,7 @@ exports.addSongs = async (username, playlist_id, song_name, artistName, link) =>
     } else {
         artistId = artist.rows[0].artist_id;
     }
-    
+
     let songId;
     const song = await db.query(`SELECT * FROM songs WHERE link = $1`, [link]);
     if (song.rows.length === 0) {
@@ -114,7 +114,7 @@ exports.addSongs = async (username, playlist_id, song_name, artistName, link) =>
         `INSERT INTO playlist_songs (playlist_id, song_id) VALUES ($1, $2) RETURNING *`,
         [playlist_id, songId]
     )
-    
+
     return result.rows[0];
 }
 
@@ -254,4 +254,19 @@ exports.terminatePlaylistSongs = async (username, playlist_id, song_id) => {
         where playlist_id=$1
         AND song_id=$2
         returning *`, [playlist_id, song_id])
+}
+exports.userLoggedIn = async (username, password) => {
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [username])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" })
+    }
+    const user = checkUserExists.rows[0]
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) {
+        return Promise.reject({ status: 401, msg: "incorrect information" })
+    }
+    const { password: _, ...userInfo } = user;
+    return userInfo
+
 }
