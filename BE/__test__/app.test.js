@@ -4,6 +4,7 @@ const seed = require('../db/seeds/seed')
 const data = require('../db/data/test-data/index')
 const app = require('../app')
 const db = require('../db/connection');
+const { pass } = require("jest-extended");
 
 beforeEach(() => {
     return seed(data);
@@ -502,9 +503,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("missing required fields")
             })
-        })
-        test('400: returns error when keys are missing', () => {
-            return request(app)
+    })
+    test('400: returns error when keys are missing', () => {
+        return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
                 song_name: 'bells cool song'
@@ -513,9 +514,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("missing required fields")
             })
-        })
-        test('400: rejects whitespace-only fields', () => {
-            return request(app)
+    })
+    test('400: rejects whitespace-only fields', () => {
+        return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
                 song_id: '   ',
@@ -526,9 +527,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("missing required fields")
             })
-        })
-        test('400: rejects invalid input types', () => {
-            return request(app)
+    })
+    test('400: rejects invalid input types', () => {
+        return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
                 song_name: 123,
@@ -539,9 +540,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("invalid input types");
             })
-        })
-        test('404: returns error if user doesnt exist', () => {
-            return request(app)
+    })
+    test('404: returns error if user doesnt exist', () => {
+        return request(app)
             .post('/api/users/NOTjess/playlists/1/songs')
             .send({
                 song_name: "bells cool song",
@@ -552,9 +553,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("not found");
             })
-        })
-        test('404: returns error if playlist doesnt exist', () => {
-            return request(app)
+    })
+    test('404: returns error if playlist doesnt exist', () => {
+        return request(app)
             .post('/api/users/jess202/playlists/100/songs')
             .send({
                 song_name: "bells cool song",
@@ -565,63 +566,183 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("playlist not found");
             })
-        })
-        
     })
-    describe("POST: /api/login", () => {
-        test("200: returns user object when login is successful", () => {
-            return request(app)
-                .post("/api/login")
-                .send({
-                    username: "jess202",
-                    password: "Jess2010"
-                })
-                .expect(200)
-                .then(({ body }) => {
-                    expect(body.user.username).toBe("jess202")
-                    expect(body.user.email).toBe("jess202@gmail.com")
-                    expect(body.user).not.toHaveProperty("password")
-                })
-        })
-        test("401: returns error message when username or password is incorrect", () => {
-            return request(app)
-                .post("/api/login")
-                .send({
-                    username: "jess202",
-                    password: "wrongpassword"
-                })
-                .expect(401)
-                .then(({ body }) => {
-                    expect(body.msg).toBe("incorrect information")
-                })
-        })
-        test("400: returns error message when username or password is missing", () => {
-            return request(app)
-                .post("/api/login")
-                .send({
-                    username: "jess202"
-                })
-                .expect(400)
-                .then(({ body }) => {
-                    expect(body.msg).toBe("missing required fields")
-                })
-        })
-        test("404: returns error message when username does not exist", () => {
-            return request(app)
-                .post("/api/login")
-                .send({
-                    username: "notjess",
-                    password: "wrongpassword"
-                })
-                .expect(404)
-                .then(({ body }) => {
-                    expect(body.msg).toBe("not found")
-                })
-        })
+
+})
+describe("POST: /api/login", () => {
+    test("200: returns user object when login is successful", () => {
+        return request(app)
+            .post("/api/login")
+            .send({
+                username: "jess202",
+                password: "Jess2010"
+            })
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.user.username).toBe("jess202")
+                expect(body.user.email).toBe("jess202@gmail.com")
+                expect(body.user).not.toHaveProperty("password")
+            })
     })
-    describe('PATCH /api/users/:username', () => {
-        test('200: updates username', () => {
-            return request(app)
+    test("401: returns error message when username or password is incorrect", () => {
+        return request(app)
+            .post("/api/login")
+            .send({
+                username: "jess202",
+                password: "wrongpassword"
+            })
+            .expect(401)
+            .then(({ body }) => {
+                expect(body.msg).toBe("incorrect information")
+            })
+    })
+    test("400: returns error message when username or password is missing", () => {
+        return request(app)
+            .post("/api/login")
+            .send({
+                username: "jess202"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+    })
+    test("404: returns error message when username does not exist", () => {
+        return request(app)
+            .post("/api/login")
+            .send({
+                username: "notjess",
+                password: "wrongpassword"
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found")
+            })
+    })
+})
+describe("POST /api/signup", () => {
+    test("201: returns user object when signup is successful", () => {
+        return request(app)
+            .post("/api/signup")
+            .send({
+                username: "bell24",
+                email: "bell24@gmail.com",
+                password: "bell123",
+                avatar_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM77ynl58EXAt3qUAlBrsZDnd_qvM1vIvFUA&s"
+            })
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.user.username).toBe("bell24")
+                expect(body.user.email).toBe("bell24@gmail.com")
+                expect(body.user).not.toHaveProperty("password")
+            })
+    })
+    test("400: returns error message when username/password/email is missing", () => {
+        return request(app)
+            .post("/api/signup")
+            .send({
+                username: "bell24",
+                password: "bell123",
+                avatar_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM77ynl58EXAt3qUAlBrsZDnd_qvM1vIvFUA&s"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("missing required fields")
+            })
+
+    })
+    test("400: returns error message when username already exists", () => {
+        return request(app)
+            .post("/api/signup")
+            .send({
+                username: "jess202",
+                email: "jessy2003@gmail.com",
+                password: "jessicaaaa123"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("user already exists")
+            })
+    })
+    test("400: returns error message when email already exists", () => {
+        return request(app)
+            .post("/api/signup")
+            .send({
+                username: "bell24",
+                email: "jess202@gmail.com",
+                password: "passowrd2003"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("email already exists")
+            })
+    })
+    test("400: returns error message when username is too short", () => {
+        return request(app)
+            .post("/api/signup")
+            .send({
+                username: "b",
+                email: "jess495@gmail.com",
+                password: "jessicaaaa123"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("username must be between 3 and 20 characters")
+            })
+    })
+    test("400: returns error message when password is too short", () => {
+        return request(app)
+            .post("/api/signup")
+            .send({
+                username: "bell24",
+                email: "jess2003@gmmail.com",
+                password: "123"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("password must be at least 6 characters long")
+            })
+    })
+    test("400: returns error message when username is too long", () => {
+        return request(app)
+            .post("/api/signup")
+            .send({
+                username: "a".repeat(21),
+                email: "jess20003@gmail.com",
+                password: "jessicaaaa122"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("username must be between 3 and 20 characters")
+            })
+    })
+    test("400: returns error message when email is invalid", () => {
+        return request(app)
+            .post("/api/signup")
+            .send({
+                username: "bell24",
+                email: "bell24gmail.com",
+                password: "bell123"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("invalid email format")
+            })
+    })
+    test("400: returns error message when username contains special characters", () => {
+        return request(app)
+            .post("/api/signup")
+            .send({
+                username: "bell24@",
+                email: "belkise2003@gmail.com",
+                password: "bell12355"
+            })
+    })
+    
+})
+describe('PATCH /api/users/:username', () => {
+    test('200: updates username', () => {
+        return request(app)
             .patch('/api/users/jess202')
             .send({
                 new_username: 'jessy202'
