@@ -270,3 +270,20 @@ exports.userLoggedIn = async (username, password) => {
     return userInfo
 
 }
+exports.signedupUsers = async (username, email, password, avatar_url) => {
+    const checkUserExists = await db.query(`select * from users
+        where username=$1`, [username])
+    if (checkUserExists.rows.length > 0) {
+        return Promise.reject({ status: 400, msg: "user already exists" })
+    }
+    const checkEmailExists = await db.query(`select * from users
+        where email=$1`, [email])
+    if (checkEmailExists.rows.length > 0) {
+        return Promise.reject({ status: 400, msg: "email already exists" })
+    }
+    return db.query(`insert into users (username, email, password, avatar_url)
+        values ($1, $2, $3, $4) returning *`, [username, email, password, avatar_url])
+        .then(({ rows }) => {
+            return rows[0]
+        })
+}

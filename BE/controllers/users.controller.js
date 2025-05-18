@@ -1,6 +1,6 @@
 const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists,
     createUsers, createPlaylist, addSongs,
-    patchUsername, patchPlaylistName, patchUserEmail, patchUserPassword, userLoggedIn,
+    patchUsername, patchPlaylistName, patchUserEmail, patchUserPassword, userLoggedIn,signedupUsers,
     terminatePlaylist, terminateUsers, terminatePlaylistSongs } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
@@ -220,6 +220,35 @@ exports.userLogin = (req, res, next) => {
     userLoggedIn(username, password).then((user) => {
         delete user.password
         res.status(200).send({ user })
+    })
+        .catch((err) => {
+            next(err)
+        })
+}
+exports.userSignup = (req, res, next) => {
+    const { username, email, password, avatar_url} = req.body
+    if (!username || !email || !password) {
+        return res.status(400).send({ msg: "missing required fields" })
+    }
+    if (username.length < 3 || username.length > 20) {
+        return Promise.reject({ status: 400, msg: "username must be between 3 and 20 characters" })
+    }
+    if (password.length < 6) {
+        return Promise.reject({ status: 400, msg: "password must be at least 6 characters long" })
+    }
+    if (!/^[a-zA-Z0-9]+$/.test(username)) {
+        return Promise.reject({ status: 400, msg: "missing required fields" })
+    }
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        return Promise.reject({ status: 400, msg: "invalid email format" })
+    }
+    if (typeof username && typeof email && typeof password !== "string" && typeof avatar_url !== "string") {
+        return Promise.reject({ status: 400, msg: "invalid input types" })
+    }
+    const hashedPassword = bcrypt.hash(password, 10)
+    signedupUsers(username, email, hashedPassword, avatar_url).then((user) => {
+        delete user.password
+        res.status(201).send({ user })
     })
         .catch((err) => {
             next(err)

@@ -8,7 +8,7 @@ const { getSongs, getSongById } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
 const { getUsers, getUsersById, getUsersPlaylists,
-    postUsers, postPlaylists, postPlaylistSongs, userLogin,
+    postUsers, postPlaylists, postPlaylistSongs, userLogin, userSignup,
     updateUsername, updatePLaylistName, updateUserEmail, updateUserPassword,
     deletePlaylist, deleteUsers, deletePlaylistSongs } = require('./controllers/users.controller');
 const { getPlaylists, getPlaylistById, getPlaylistSongs } = require('./controllers/playlist.controller');
@@ -27,8 +27,9 @@ app.get('/api/playlists', getPlaylists)
 app.get('/api/playlists/:playlist_id', getPlaylistById)
 app.get('/api/users/:username/playlists', getUsersPlaylists)
 app.get('/api/playlists/:playlist_id/songs', getPlaylistSongs)
-app.post('/api/users', postUsers)
+app.post('/api/signup', userSignup)
 app.post('/api/login', userLogin)
+app.post('/api/users', postUsers)
 app.post('/api/users/:username/playlists', postPlaylists)
 app.post('/api/users/:username/playlists/:playlist_id/songs', postPlaylistSongs)
 app.patch("/api/users/:username", updateUsername)
@@ -39,13 +40,9 @@ app.delete("/api/users/:username/playlists/:playlist_id", deletePlaylist)
 app.delete('/api/users/:username', deleteUsers)
 app.delete('/api/users/:username/playlists/:playlist_id/songs/:song_id', deletePlaylistSongs)
 //focus on the one below! :)
-
-
 // GET /api/search?song=drake – Search for songs by name or artist
-
 // GET /api/users/:username/history – (Optional) Get a user’s song listening history
 
-// POST /api/login / POST /api/signup – (If adding authentication)
 app.use(handlePsqlErrors)
 
 app.use(handleCustomErrors)

@@ -19,5 +19,3 @@ exports.getSongById = (req, res, next) => {
         })
 }
 
-//error handle in both controller and model
-// make error handing tests
