@@ -502,9 +502,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("missing required fields")
             })
-    })
-    test('400: returns error when keys are missing', () => {
-        return request(app)
+        })
+        test('400: returns error when keys are missing', () => {
+            return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
                 song_name: 'bells cool song'
@@ -513,9 +513,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("missing required fields")
             })
-    })
-    test('400: rejects whitespace-only fields', () => {
-        return request(app)
+        })
+        test('400: rejects whitespace-only fields', () => {
+            return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
                 song_id: '   ',
@@ -526,9 +526,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("missing required fields")
             })
-    })
-    test('400: rejects invalid input types', () => {
-        return request(app)
+        })
+        test('400: rejects invalid input types', () => {
+            return request(app)
             .post('/api/users/jess202/playlists/1/songs')
             .send({
                 song_name: 123,
@@ -539,9 +539,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("invalid input types");
             })
-    })
-    test('404: returns error if user doesnt exist', () => {
-        return request(app)
+        })
+        test('404: returns error if user doesnt exist', () => {
+            return request(app)
             .post('/api/users/NOTjess/playlists/1/songs')
             .send({
                 song_name: "bells cool song",
@@ -552,9 +552,9 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("not found");
             })
-    })
-    test('404: returns error if playlist doesnt exist', () => {
-        return request(app)
+        })
+        test('404: returns error if playlist doesnt exist', () => {
+            return request(app)
             .post('/api/users/jess202/playlists/100/songs')
             .send({
                 song_name: "bells cool song",
@@ -565,12 +565,63 @@ describe('POST /api/users/:username/playlists/:playlist_id/songs', () => {
             .then(({ body }) => {
                 expect(body.msg).toBe("playlist not found");
             })
+        })
+        
     })
-
-})
-describe('PATCH /api/users/:username', () => {
-    test('200: updates username', () => {
-        return request(app)
+    describe("POST: /api/login", () => {
+        test("200: returns user object when login is successful", () => {
+            return request(app)
+                .post("/api/login")
+                .send({
+                    username: "jess202",
+                    password: "Jess2010"
+                })
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.user.username).toBe("jess202")
+                    expect(body.user.email).toBe("jess202@gmail.com")
+                    expect(body.user).not.toHaveProperty("password")
+                })
+        })
+        test("401: returns error message when username or password is incorrect", () => {
+            return request(app)
+                .post("/api/login")
+                .send({
+                    username: "jess202",
+                    password: "wrongpassword"
+                })
+                .expect(401)
+                .then(({ body }) => {
+                    expect(body.msg).toBe("incorrect information")
+                })
+        })
+        test("400: returns error message when username or password is missing", () => {
+            return request(app)
+                .post("/api/login")
+                .send({
+                    username: "jess202"
+                })
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe("missing required fields")
+                })
+        })
+        test("404: returns error message when username does not exist", () => {
+            return request(app)
+                .post("/api/login")
+                .send({
+                    username: "notjess",
+                    password: "wrongpassword"
+                })
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe("not found")
+                })
+        })
+    })
+    describe('PATCH /api/users/:username', () => {
+        test('200: updates username', () => {
+            return request(app)
             .patch('/api/users/jess202')
             .send({
                 new_username: 'jessy202'

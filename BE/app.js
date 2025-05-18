@@ -8,7 +8,7 @@ const { getSongs, getSongById } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
 const { getUsers, getUsersById, getUsersPlaylists,
-    postUsers, postPlaylists, postPlaylistSongs,
+    postUsers, postPlaylists, postPlaylistSongs, userLogin,
     updateUsername, updatePLaylistName, updateUserEmail, updateUserPassword,
     deletePlaylist, deleteUsers, deletePlaylistSongs } = require('./controllers/users.controller');
 const { getPlaylists, getPlaylistById, getPlaylistSongs } = require('./controllers/playlist.controller');
@@ -28,6 +28,7 @@ app.get('/api/playlists/:playlist_id', getPlaylistById)
 app.get('/api/users/:username/playlists', getUsersPlaylists)
 app.get('/api/playlists/:playlist_id/songs', getPlaylistSongs)
 app.post('/api/users', postUsers)
+app.post('/api/login', userLogin)
 app.post('/api/users/:username/playlists', postPlaylists)
 app.post('/api/users/:username/playlists/:playlist_id/songs', postPlaylistSongs)
 app.patch("/api/users/:username", updateUsername)
@@ -38,11 +39,6 @@ app.delete("/api/users/:username/playlists/:playlist_id", deletePlaylist)
 app.delete('/api/users/:username', deleteUsers)
 app.delete('/api/users/:username/playlists/:playlist_id/songs/:song_id', deletePlaylistSongs)
 //focus on the one below! :)
-// POST /api/songs (or patch) – (Optional) Add a new song manually (if not using YouTube API)
-
-// DELETE /api/songs/:song_id – Delete a song (optional, if manually added)
-
-// DELETE /api/playlists/:playlist_id/songs/:song_id – Remove a song from a playlist
 
 
 // GET /api/search?song=drake – Search for songs by name or artist

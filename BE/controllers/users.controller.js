@@ -1,6 +1,6 @@
 const { fetchUsers, fetchUsersbyId, fetchUsersPlaylists,
     createUsers, createPlaylist, addSongs,
-    patchUsername, patchPlaylistName, patchUserEmail, patchUserPassword,
+    patchUsername, patchPlaylistName, patchUserEmail, patchUserPassword, userLoggedIn,
     terminatePlaylist, terminateUsers, terminatePlaylistSongs } = require("../models/users.model")
 
 exports.getUsers = (req, res, next) => {
@@ -207,6 +207,19 @@ exports.deletePlaylistSongs = (req, res, next) => {
     const { username, playlist_id, song_id } = req.params
     terminatePlaylistSongs(username, playlist_id, song_id).then((deleted_song) => {
         res.status(204).send({})
+    })
+        .catch((err) => {
+            next(err)
+        })
+}
+exports.userLogin = (req, res, next) => {
+    const { username, password } = req.body
+    if (!username || !password) {
+        return res.status(400).send({ msg: "missing required fields" })
+    }
+    userLoggedIn(username, password).then((user) => {
+        delete user.password
+        res.status(200).send({ user })
     })
         .catch((err) => {
             next(err)
