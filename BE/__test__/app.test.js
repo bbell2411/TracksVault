@@ -5,6 +5,7 @@ const data = require('../db/data/test-data/index')
 const app = require('../app')
 const db = require('../db/connection');
 const { pass } = require("jest-extended");
+const e = require("cors");
 
 beforeEach(() => {
     return seed(data);
@@ -798,6 +799,123 @@ describe("POST /api/signup", () => {
             })
     })
 
+})
+describe("POST /api/history", () => {
+    test("201: returns history object when history is added", () => {
+        return request(app)
+            .post("/api/history")
+            .send({
+                username: "jess202",
+                song_id: 1,
+                played_at: "2023-10-01T10:00:00Z"
+            })
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.history.history_id).toBe(4)
+                expect(body.history.username).toBe("jess202")
+                expect(body.history.song_id).toBe(1)
+                expect(body.history.played_at).toBe("2023-10-01T10:00:00.000Z")
+            })
+    })
+    test("400: returns error message when keys are missing", () => {
+        return request(app)
+            .post("/api/history")
+            .send({})
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test("400: returns error message when username/song_id/played_at is missing", () => {
+        return request(app)
+            .post("/api/history")
+            .send({
+                username: "jess202",
+                song_id: 1
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test("400: returns error message when username does not exist", () => {
+        return request(app)
+            .post("/api/history")
+            .send({
+                username: "notjess",
+                song_id: 1,
+                played_at: "2023-10-01T12:00:00Z"
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("User not found")
+            })
+    })
+    test("400: returns error message when song_id does not exist", () => {
+        return request(app)
+            .post("/api/history")
+            .send({
+                username: "jess202",
+                song_id: 100,
+                played_at: "2023-10-01T12:00:00Z"
+            })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("song not found")
+            })
+    })
+    test("400: returns error message when played_at is not a valid date", () => {
+        return request(app)
+            .post("/api/history")
+            .send({
+                username: "jess202",
+                song_id: 1,
+                played_at: "not a date"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("invalid date format")
+            })
+    })
+    test("400: returns error message when username is not a string", () => {
+        return request(app)
+            .post("/api/history")
+            .send({
+                username: 123,
+                song_id: 1,
+                played_at: "2023-10-01T12:00:00Z"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test("400: returns error message when song_id is not a number", () => {
+        return request(app)
+            .post("/api/history")
+            .send({
+                username: "jess202",
+                song_id: "not a number",
+                played_at: "2023-10-01T12:00:00Z"
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test("400: returns error message when played_at is not a string", () => {
+        return request(app)
+            .post("/api/history")
+            .send({
+                username: "jess202",
+                song_id: 1,
+                played_at: 123
+            })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
 })
 describe('PATCH /api/users/:username', () => {
     test('200: updates username', () => {
