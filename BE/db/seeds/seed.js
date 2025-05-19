@@ -60,9 +60,9 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs,
         .then(() => {
             return db.query(`CREATE TABLE history (
                 history_id SERIAL PRIMARY KEY,
-                song_id INT REFERENCES songs(song_id) ON DELETE CASCADE,
-                username VARCHAR(200) REFERENCES users(username) ON DELETE CASCADE,
-                played_at TIMESTAMP default current_timestamp
+                song_id INT REFERENCES songs(song_id),
+                username VARCHAR(200) REFERENCES users(username)  ON UPDATE CASCADE ON DELETE CASCADE,
+                played_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
             )`)
         })
         .then(() => {

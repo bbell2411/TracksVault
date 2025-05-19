@@ -67,7 +67,7 @@ describe('seed', () => {
                         AND column_name = 'played_at';`)
                 .then(({ rows: [column] }) => {
                     expect(column.column_name).toBe('played_at');
-                    expect(column.data_type).toBe('timestamp without time zone');
+                    expect(column.data_type).toBe('timestamp with time zone');
                 })
         })
     })
