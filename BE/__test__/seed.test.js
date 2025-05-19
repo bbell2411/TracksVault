@@ -6,6 +6,71 @@ beforeAll(() => seed(data));
 afterAll(() => db.end());
 
 describe('seed', () => {
+    describe('history table exists', () => {
+        test('history table exists', () => {
+            return db
+                .query(
+                    `SELECT EXISTS (
+                        SELECT FROM
+                            information_schema.tables
+                        WHERE
+                            table_name = 'history'
+                        );`
+                )
+                .then(({ rows: [{ exists }] }) => {
+                    expect(exists).toBe(true);
+                });
+        })
+        test('history table has history_id the primary key', () => {
+            return db
+                .query(
+                    `SELECT column_name
+                          FROM information_schema.table_constraints AS tc
+                          JOIN information_schema.key_column_usage AS kcu
+                          ON tc.constraint_name = kcu.constraint_name
+                          WHERE tc.constraint_type = 'PRIMARY KEY'
+                          AND tc.table_name = 'history';`
+                )
+                .then(({ rows: [{ column_name }] }) => {
+                    expect(column_name).toBe('history_id');
+                });
+        });
+        test('history table has song_id as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'history'
+                        AND column_name = 'song_id';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('song_id');
+                    expect(column.data_type).toBe('integer');
+                })
+        })
+        test('history table has username as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'history'
+                        AND column_name = 'username';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('username');
+                    expect(column.data_type).toBe('character varying');
+                })
+        })
+        test('history table has played_at as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'history'
+                        AND column_name = 'played_at';`)
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('played_at');
+                    expect(column.data_type).toBe('timestamp without time zone');
+                })
+        })
+    })
     describe('songs table', () => {
         test('songs table exists', () => {
             return db
@@ -181,7 +246,7 @@ describe('seed', () => {
                 })
         })
     })
-   describe('playlist table', () => {
+    describe('playlist table', () => {
         test('playlist table exists', () => {
             return db
                 .query(
@@ -337,5 +402,17 @@ describe('seed', () => {
                 });
             });
         })
+        test('history data has been inserted correctly', () => {
+            return db.query(`SELECT * FROM history`).then(({ rows: history }) => {
+                expect(history).toHaveLength(3);
+                history.forEach((hist) => {
+                    expect(hist).toHaveProperty('history_id');
+                    expect(hist).toHaveProperty('song_id');
+                    expect(hist).toHaveProperty('username');
+                    expect(hist).toHaveProperty('played_at');
+                })
+            })
+        })
     })
 })
+

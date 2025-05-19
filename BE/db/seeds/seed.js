@@ -3,9 +3,12 @@ const format = require('pg-format')
 const bcrypt = require("bcrypt")
 const { formatSongs, playlistLookup, songsLookup } = require('../seeds/utils')
 
-const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs }) => {
+const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs, history }) => {
     let insertedSongs
-    return db.query(`DROP TABLE IF EXISTS playlist_songs`)
+    return db.query('drop table if exists history')
+        .then(() => {
+            return db.query(`DROP TABLE IF EXISTS playlist_songs`)
+        })
         .then(() => {
             return db.query(`DROP TABLE IF EXISTS playlist`)
         })
@@ -52,6 +55,14 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
             return db.query(`create table playlist_songs (
             playlist_id int REFERENCES playlist(playlist_id) ON DELETE CASCADE,
             song_id int REFERENCES songs(song_id) ON DELETE CASCADE
+            )`)
+        })
+        .then(() => {
+            return db.query(`CREATE TABLE history (
+                history_id SERIAL PRIMARY KEY,
+                song_id INT REFERENCES songs(song_id) ON DELETE CASCADE,
+                username VARCHAR(200) REFERENCES users(username) ON DELETE CASCADE,
+                played_at TIMESTAMP default current_timestamp
             )`)
         })
         .then(() => {
@@ -111,6 +122,18 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs 
             })
             const sql = format(`insert into playlist_songs
             (song_id, playlist_id)
+            values
+            %L
+            returning *`, nestedArray)
+            return db.query(sql)
+        })
+        .then(()=>{
+            const songsLookupObj = songsLookup(insertedSongs)
+            const nestedArray = history.map((hist) => {
+                return [hist.username, songsLookupObj[hist.song_id], hist.played_at]
+            })
+            const sql = format(`insert into history
+            (username, song_id, played_at)
             values
             %L
             returning *`, nestedArray)

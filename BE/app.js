@@ -41,7 +41,6 @@ app.delete("/api/users/:username/playlists/:playlist_id", deletePlaylist)
 app.delete('/api/users/:username', deleteUsers)
 app.delete('/api/users/:username/playlists/:playlist_id/songs/:song_id', deletePlaylistSongs)
 //focus on the one below! :)
-// GET /api/search?song=drake – Search for songs by name or artist
 // GET /api/users/:username/history – (Optional) Get a user’s song listening history
 
 app.use(handlePsqlErrors)

@@ -10,6 +10,5 @@ module.exports=[
         email:'alex010@gmail.com',
         password:"AlexPassword1990",
         avatar_url:"https://i.pinimg.com/236x/fb/7a/17/fb7a17e227af3cf2e63c756120842209.jpg"
-    },
-
+    }
 ]
