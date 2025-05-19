@@ -16,3 +16,18 @@ exports.fetchSongById = (id) => {
             return rows[0]
         })
 }
+exports.searchSongs = (search_term) => {
+    return db.query(
+        `SELECT songs.song_id, songs.song_name, songs.link, artists.artists_name AS artist_name
+         FROM songs
+         JOIN artists ON songs.artist = artists.artist_id
+         WHERE songs.song_name ILIKE $1 OR artists.artists_name ILIKE $1`,
+        [`%${search_term}%`]
+    )
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+                return Promise.reject({ status: 404, msg: "not found" })
+            }
+            return rows
+        })
+}

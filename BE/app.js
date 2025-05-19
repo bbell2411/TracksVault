@@ -4,7 +4,7 @@ const db = require('./db/connection')
 const app = express()
 const endpoints = require('./endpoints.json')
 const { getEndpoints } = require('./controllers/getEndpoints.controller')
-const { getSongs, getSongById } = require('./controllers/songs.controller');
+const { getSongs, getSongById, search } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
 const { getUsers, getUsersById, getUsersPlaylists,
@@ -27,6 +27,7 @@ app.get('/api/playlists', getPlaylists)
 app.get('/api/playlists/:playlist_id', getPlaylistById)
 app.get('/api/users/:username/playlists', getUsersPlaylists)
 app.get('/api/playlists/:playlist_id/songs', getPlaylistSongs)
+app.get('/api/search', search)
 app.post('/api/signup', userSignup)
 app.post('/api/login', userLogin)
 app.post('/api/users', postUsers)
@@ -57,6 +58,4 @@ module.exports = app
 //see how we can add songs to database with post requests 
 //delete 
 //is yt api used in be or fe? (ask)
-//LISTEN FILE?!?!?!
 
-//ENDPOINTS.JSON
