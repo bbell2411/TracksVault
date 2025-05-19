@@ -23,7 +23,66 @@ describe("GET /api", () => {
                 expect(endpoints).toEqual(endpointsJson);
             });
     });
-});
+})
+describe('GET /api/search', () => {
+    test('200: returns songs that match search term', () => {
+        return request(app)
+            .get('/api/search?search_term=song one')
+            .expect(200)
+            .then(({ body: { search_result } }) => {
+                expect(search_result).toBeInstanceOf(Array)
+                expect(search_result.length).toBeGreaterThan(0)
+                search_result.forEach((song) => {
+                    const { song_id, song_name, link, artist_name } = song
+                    expect(typeof song_id).toBe("number")
+                    expect(typeof song_name).toBe("string")
+                    expect(typeof link).toBe("string")
+                    expect(typeof artist_name).toBe("string")
+                })
+            })
+    })
+    test('400: returns error when missing search term', () => {
+        return request(app)
+            .get('/api/search')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: returns error when search term is empty string', () => {
+        return request(app)
+            .get('/api/search?search_term=')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: returns error when search term is whitespace', () => {
+        return request(app)
+            .get('/api/search?search_term=   ')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+    test('400: returns error when search term is an empty string', () => {
+        return request(app)
+            .get('/api/search?search_term=')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            })
+    })
+
+    test('404: returns error when no songs match search term', () => {
+        return request(app)
+            .get('/api/search?search_term=notfoundjfjufrhhf')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("not found")
+            })
+    })
+})
 
 describe('GET /api/songs', () => {
     test('200: gets songs', () => {
@@ -738,7 +797,7 @@ describe("POST /api/signup", () => {
                 password: "bell12355"
             })
     })
-    
+
 })
 describe('PATCH /api/users/:username', () => {
     test('200: updates username', () => {
