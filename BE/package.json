@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand",
     "setup-dbs": "psql -f ./db/setup-dbs.sql",
     "seed-dev": "node ./db/seeds/run-seed.js",
     "test-seed": "jest seed.test.js",
