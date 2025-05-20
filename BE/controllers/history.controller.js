@@ -1,4 +1,4 @@
-const { updatingHistory } = require("../models/history.model")
+const { updatingHistory, fetchUsersHistory } = require("../models/history.model")
 
 exports.postHistory = (req, res, next) => {
     const { username, song_id, played_at } = req.body
@@ -17,6 +17,17 @@ exports.postHistory = (req, res, next) => {
     updatingHistory(username, song_id, played_at)
         .then((history) => {
             res.status(201).send({ history })
+        })
+        .catch((err) => {
+            next(err)
+        })
+}
+
+exports.getUsersHistory = (req, res, next) => {
+    const { username } = req.params
+    fetchUsersHistory(username)
+        .then((history) => {
+            res.status(200).send({ history })
         })
         .catch((err) => {
             next(err)

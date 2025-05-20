@@ -18,3 +18,15 @@ exports.updatingHistory = async (username, song_id, played_at) => {
         return result.rows[0]
     })
 }
+exports.fetchUsersHistory = async (username) => {
+    const checkUserExists = await db.query(`SELECT * FROM users WHERE username = $1`,[username])
+    if (checkUserExists.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'User not found' })
+    }
+    const sql = `SELECT * FROM history WHERE username = $1`
+    const values = [username]
+
+    return db.query(sql, values).then((result) => {
+        return result.rows
+    })
+}
