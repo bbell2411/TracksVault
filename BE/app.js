@@ -43,7 +43,6 @@ app.patch('/api/users/:username/password', updateUserPassword)
 app.delete("/api/users/:username/playlists/:playlist_id", deletePlaylist)
 app.delete('/api/users/:username', deleteUsers)
 app.delete('/api/users/:username/playlists/:playlist_id/songs/:song_id', deletePlaylistSongs)
-// GET /api/users/:username/history – (Optional) Get a user’s song listening history
 
 app.use(handlePsqlErrors)
 
@@ -53,10 +52,4 @@ app.use(handleServerErrors)
 
 
 module.exports = app
-// add a query like sort by most trending? or artists
-// see how you can integrate youtubes api (ask)
-//api call for /api/songs/:artist_id/songs ?? (+/:song_id, idk ask)
-//see how we can add songs to database with post requests 
-//delete 
-//is yt api used in be or fe? (ask)
 

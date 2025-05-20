@@ -1,13 +1,14 @@
 {
   "name": "be",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "listen.js",
   "scripts": {
     "test": "jest --runInBand",
     "setup-dbs": "psql -f ./db/setup-dbs.sql",
     "seed-dev": "node ./db/seeds/run-seed.js",
     "test-seed": "jest seed.test.js",
-    "start": "node listen.js"
+    "start": "node listen.js",
+    "seed-prod": "NODE_ENV=production npm run seed-dev"
   },
   "keywords": [],
   "author": "",
