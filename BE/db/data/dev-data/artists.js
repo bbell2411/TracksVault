@@ -1,12 +1,41 @@
 module.exports = [
-    {
-        artists_name: "Polo G"
-    },
-    {
-        artists_name: "The Weeknd"
-    },
-    {
-        artists_name: "Cris MJ"
-    },
-    { artists_name: "FloyyMenor" }
-]
+    { artists_name: "Polo G" },
+    { artists_name: "The Weeknd" },
+    { artists_name: "Cris MJ" },
+    { artists_name: "FloyyMenor" },
+    { artists_name: "Doja Cat" },
+    { artists_name: "Kendrick Lamar" },
+    { artists_name: "Rema" },
+    { artists_name: "Billie Eilish" },
+    { artists_name: "Drake" },
+    { artists_name: "Peso Pluma" },
+    { artists_name: "SZA" },
+    { artists_name: "Central Cee" },
+    { artists_name: "J. Cole" },
+    { artists_name: "Ice Spice" },
+    { artists_name: "Bad Bunny" },
+    { artists_name: "Jung Kook" },
+    { artists_name: "Travis Scott" },
+    { artists_name: "Tyla" },
+    { artists_name: "Kali Uchis" },
+    { artists_name: "Metro Boomin" },
+    { artists_name: "21 Savage" },
+    { artists_name: "Olivia Rodrigo" },
+    { artists_name: "Dave" },
+    { artists_name: "Tems" },
+    { artists_name: "Fred again.." },
+    { artists_name: "Stormzy" },
+    { artists_name: "Icewear Vezzo" },
+    { artists_name: "Lana Del Rey" },
+    { artists_name: "Zach Bryan" },
+    { artists_name: "RAYE" },
+    { artists_name: "Ariana Grande" },
+    { artists_name: "Tyler, The Creator" },
+    { artists_name: "Gunna" },
+    { artists_name: "Karol G" },
+    { artists_name: "Nathy Peluso" },
+    { artists_name: "Summer Walker" },
+    { artists_name: "PinkPantheress" },
+    { artists_name: "Brent Faiyaz" },
+    { artists_name: "Miguel" }
+  ]
