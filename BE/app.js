@@ -7,7 +7,7 @@ const { getEndpoints } = require('./controllers/getEndpoints.controller')
 const { getSongs, getSongById, search } = require('./controllers/songs.controller');
 const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./controllers/errorHandler.controller');
 const { getArtists, getArtistsById } = require('./controllers/artists.controller');
-const { postHistory } = require('./controllers/history.controller')
+const { postHistory, getUsersHistory } = require('./controllers/history.controller')
 const { getUsers, getUsersById, getUsersPlaylists,
     postUsers, postPlaylists, postPlaylistSongs, userLogin, userSignup,
     updateUsername, updatePLaylistName, updateUserEmail, updateUserPassword,
@@ -29,6 +29,7 @@ app.get('/api/playlists/:playlist_id', getPlaylistById)
 app.get('/api/users/:username/playlists', getUsersPlaylists)
 app.get('/api/playlists/:playlist_id/songs', getPlaylistSongs)
 app.get('/api/search', search)
+app.get("/api/users/:username/history", getUsersHistory)
 app.post('/api/signup', userSignup)
 app.post('/api/login', userLogin)
 app.post('/api/users', postUsers)

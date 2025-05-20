@@ -312,6 +312,32 @@ describe("GET /api/playlists/:playlist_id/songs", () => {
             })
     })
 })
+describe('GET /api/users/:username/history', () => {
+    test('200: returns user history', () => {
+        return request(app)
+            .get('/api/users/jess202/history')
+            .expect(200)
+            .then(({ body: { history } }) => {
+                expect(history.length).toBeGreaterThan(0)
+                history.forEach((h) => {
+                    const { history_id, username, song_id, played_at } = h
+                    expect(typeof history_id).toBe("number")
+                    expect(typeof username).toBe("string")
+                    expect(typeof song_id).toBe("number")
+                    expect(typeof played_at).toBe("string")
+                })
+            })
+    })
+    test('404: returns error when user not found', () => {
+        return request(app)
+            .get('/api/users/NOTjess/history')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("User not found")
+            })
+    })
+
+})
 describe('POST /api/users', () => {
     test('201: creates a new user', () => {
         return request(app)
@@ -1368,3 +1394,4 @@ describe('DELETE /api/users/:username/playlists/:playlist_id/songs', () => {
             })
     })
 })
+
