@@ -65,92 +65,60 @@ export default function HomeScreen() {
 }
 const colors = {
   background: '#0d0b1f', 
-  card: '#1e1839',      
-  text: '#e0e0e0',       
-  accent: '#9d4edd',     
-  secondary: '#00ffcc',  
-}
+  card: '#1a152f',
+  text: '#e0e0e0',
+  accent: '#9d4edd',       // Purple glow
+  secondary: '#00ffcc',    // Neon green
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingTop: 40,
   },
   heading: {
-    fontSize: 32,
-    fontFamily: 'Poppins-Bold', // Added for consistency
+    fontSize: 28,
+    fontWeight: '700',
     color: colors.accent,
     marginBottom: 24,
-    letterSpacing: -0.5,
+    fontFamily: 'System',
+    textAlign: 'left',
   },
   card: {
     backgroundColor: colors.card,
-    padding: 20,
-    marginBottom: 16,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.accent,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  playlistName: {
-    fontSize: 24, 
-    fontFamily: 'Poppins-SemiBold',
-    color: colors.text,
-    marginBottom: 0,
-    letterSpacing: -0.3,
-    lineHeight: 30,
-    paddingTop: 8, 
-    textShadowColor: 'rgba(0,0,0,0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  },
-  name: {
-    color: colors.secondary,
-    fontSize: 15,
-    fontFamily: 'Poppins-Medium',
-    opacity: 0.9,
-    marginBottom: 2, // Tighter spacing
-  },
-  user: {
-    color: '#FF69B4',
-    fontSize: 14,
-    fontFamily: 'Poppins-Regular',
-    opacity: 0.8,
-    letterSpacing: 0.2,
-  },
-  metaContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 12, // More space above metadata
-  },
-  songCount: {
-    color: colors.secondary,
-    fontSize: 13,
-    fontFamily: 'Poppins-Regular', // Now all Poppins
-    opacity: 0.7,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginBottom: 20,
+    shadowColor: colors.accent,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 6,
   },
   playlistPic: {
-    width: '100% + 36px',   // Compensate for card's horizontal padding
-    height: 140,            // Ideal aspect ratio for music covers
-    marginLeft: -18,        // Counteract card padding for edge-to-edge
-    marginRight: -18,
-    marginTop: 12,
-    borderRadius: 0,        // Sharp edges to match your theme
-    backgroundColor: '#1A1A1A', // Dark base for visibility
-    overflow: 'hidden',     // Crop anything outside bounds
-    borderBottomWidth: 1,   // Subtle separation
-    borderBottomColor: 'rgba(255,255,255,0.1)',
+    width: '100%',
+    height: 160,
+    resizeMode: 'cover',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
-  nowPlayingBar: {
-    height: 60,
-    backgroundColor: colors.card,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.1)',
+  playlistName: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: colors.text,
+    marginTop: 12,
+    paddingHorizontal: 16,
+    fontFamily: 'System',
+    letterSpacing: 0.5,
+  },
+  user: {
+    fontSize: 14,
+    color: colors.secondary,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    fontFamily: 'System',
+    opacity: 0.85,
   },
 });
