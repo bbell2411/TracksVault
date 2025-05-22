@@ -45,16 +45,15 @@ export default function HomeScreen() {
         <Text style={styles.heading}>Playlists</Text>
         <FlatList
           data={playlists}
-          keyExtractor={(item, index) => item.playlist_id.toString()}
+          keyExtractor={(item) => item.playlist_id.toString()}
           contentContainerStyle={{ paddingBottom: 20 }}
           renderItem={({ item }) => (
-            console.log(item),
             <View style={styles.card}>
               <Text style={styles.name}>{item.name}</Text>
-              <Text>By: {item.user_id}</Text>
+              <Text style={styles.user}>{item.user_id}</Text>
               <Image
-                source={{ uri: item.avatar_url ? item.avatar_url : 'https://i.pinimg.com/1200x/35/99/27/359927d1398df943a13c227ae0468357.jpg' }}
-                style={{ width: 100, height: 100, borderRadius: 10 }}
+                source={{ uri: item.avatar_url ? item.avatar_url : 'https://i.pinimg.com/736x/9c/a0/4f/9ca04ff522b08a3237cc4460520ab16b.jpg' }}
+                style={styles.playlistPic}
               />
             </View>
           )}
@@ -64,33 +63,94 @@ export default function HomeScreen() {
   )
   
 }
+const colors = {
+  background: '#0d0b1f', 
+  card: '#1e1839',      
+  text: '#e0e0e0',       
+  accent: '#9d4edd',     
+  secondary: '#00ffcc',  
+}
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    paddingHorizontal: 20,
-  },
-  center: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: colors.background,
+    paddingHorizontal: 24,
+    paddingTop: 40,
   },
   heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontSize: 32,
+    fontFamily: 'Poppins-Bold', // Added for consistency
+    color: colors.accent,
+    marginBottom: 24,
+    letterSpacing: -0.5,
   },
   card: {
-    padding: 15,
-    borderWidth: 1,
-    borderRadius: 10,
-    marginBottom: 10,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.card,
+    padding: 20,
+    marginBottom: 16,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.accent,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   playlistName: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 24, 
+    fontFamily: 'Poppins-SemiBold',
+    color: colors.text,
+    marginBottom: 0,
+    letterSpacing: -0.3,
+    lineHeight: 30,
+    paddingTop: 8, 
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
-})
-
-
+  name: {
+    color: colors.secondary,
+    fontSize: 15,
+    fontFamily: 'Poppins-Medium',
+    opacity: 0.9,
+    marginBottom: 2, // Tighter spacing
+  },
+  user: {
+    color: '#FF69B4',
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    opacity: 0.8,
+    letterSpacing: 0.2,
+  },
+  metaContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 12, // More space above metadata
+  },
+  songCount: {
+    color: colors.secondary,
+    fontSize: 13,
+    fontFamily: 'Poppins-Regular', // Now all Poppins
+    opacity: 0.7,
+  },
+  playlistPic: {
+    width: '100% + 36px',   // Compensate for card's horizontal padding
+    height: 140,            // Ideal aspect ratio for music covers
+    marginLeft: -18,        // Counteract card padding for edge-to-edge
+    marginRight: -18,
+    marginTop: 12,
+    borderRadius: 0,        // Sharp edges to match your theme
+    backgroundColor: '#1A1A1A', // Dark base for visibility
+    overflow: 'hidden',     // Crop anything outside bounds
+    borderBottomWidth: 1,   // Subtle separation
+    borderBottomColor: 'rgba(255,255,255,0.1)',
+  },
+  nowPlayingBar: {
+    height: 60,
+    backgroundColor: colors.card,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.1)',
+  },
+});
