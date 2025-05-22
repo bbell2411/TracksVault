@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Button, SafeAreaView, ActivityIndicator, FlatList, Image } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
+import MusicNoteLoading from "./MusicNoteLoading"
 // import { useAuth } from '../context/AuthContext'
 import { getPlaylists } from './api'
 
@@ -10,7 +12,7 @@ export default function HomeScreen() {
   const [isError, setIsError] = useState(null)
 
   useEffect(() => {
-    setIsLoading(true)
+    setTimeout(() => setIsLoading(false), 3000)
     getPlaylists().then(({ playlists }) => {
       setPlaylists(playlists)
     })
@@ -24,10 +26,7 @@ export default function HomeScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-        <Text>Loading playlists...</Text>
-      </View>
+     <MusicNoteLoading />
     )
   }
 
@@ -40,6 +39,11 @@ export default function HomeScreen() {
   }
 
   return (
+    <>
+    <LinearGradient
+  colors={colors.gradientBackground}
+  style={StyleSheet.absoluteFill}/>
+
     <SafeAreaView style={{ flex: 1 }}>
       <View style={[styles.container, { flex: 1 }]}>
         <Text style={styles.heading}>Playlists</Text>
@@ -60,15 +64,17 @@ export default function HomeScreen() {
         />
       </View>
     </SafeAreaView>
+    </>
   )
   
 }
 const colors = {
-  background: '#0d0b1f', 
-  card: '#1a152f',
+  solidBackground: '#0d0b1f', 
+  gradientBackground: ['rgba(157, 78, 221, 0.4)', 'rgba(13, 11, 31, 0.9)'], 
+  card: 'hsla(250, 25%, 15%, 0.6)',
   text: '#e0e0e0',
-  accent: '#9d4edd',       // Purple glow
-  secondary: '#00ffcc',    // Neon green
+  accent: '#FFF0F5',
+  secondary: '#ADD8E6',
 };
 
 const styles = StyleSheet.create({
@@ -79,33 +85,33 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   heading: {
-    fontSize: 28,
+    fontSize: 40,
     fontWeight: '700',
     color: colors.accent,
     marginBottom: 24,
     fontFamily: 'System',
     textAlign: 'left',
   },
-  card: {
-    backgroundColor: colors.card,
-    borderRadius: 16,
-    overflow: 'hidden',
-    marginBottom: 20,
-    shadowColor: colors.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 6,
-  },
-  playlistPic: {
-    width: '100%',
-    height: 160,
-    resizeMode: 'cover',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-  },
-  playlistName: {
-    fontSize: 22,
+ card: {
+  backgroundColor: 'rgba(26, 21, 47, 0.6)', 
+  borderRadius: 20,
+  overflow: 'hidden',
+  marginBottom: 24,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 8 },
+  shadowOpacity: 0.25,
+  shadowRadius: 12,
+  elevation: 10,
+},
+
+playlistPic: {
+  width: '100%',
+  height: 300,
+  resizeMode: 'cover',
+  transparency: 0.9,
+},
+  name: {
+    fontSize: 45,
     fontWeight: '700',
     color: colors.text,
     marginTop: 12,
