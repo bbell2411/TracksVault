@@ -15,24 +15,24 @@ module.exports = [
         username: "dojacode",
         email: "doja@gmail.com",
         password: "MeowMix123!",
-        avatar_url: "https://i.pinimg.com/236x/d6/c5/3d/d6c53df7a91d1cfb708016fa799de030.jpg"
+        avatar_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdlYUI6XBQURdn74WFt2H3fX6K-WmRvKGgRg&s"
     },
     {
         username: "remszn",
         email: "remaboy@gmail.com",
         password: "RaveAndRoses1",
-        avatar_url: "https://i.pinimg.com/236x/4a/85/5e/4a855e7ea3b3a33ac2cd23e63e3d4ae9.jpg"
+        avatar_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7x1MeTDF-ekeTo0vl7BqFacl0VpZFje8_-g&s"
     },
     {
         username: "icedoutspice",
         email: "ice.spice@gmail.com",
         password: "PrincessDiana$$",
-        avatar_url: "https://i.pinimg.com/236x/9a/1b/f2/9a1bf2d6dcd198f9a87a34c03e6f7c9a.jpg"
+        avatar_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStQoR1O97b3QK7rLQU30WKpyCC5uT2t970Ef1hoSFsQa3JyH8BRvAa7_FMTSeahofI1dk&usqp=CAU"
     },
     {
         username: "sabrinacarpenter",
         email: "sab2411@gmail.com",
         password: "SkinnyDipping123",
-        avatar_url: "https://i.pinimg.com/236x/1d/38/f8/1d38f8c4fdf7297058a5be9d3f80fce6.jpg"
+        avatar_url: "https://art.pixilart.com/a7c7fc26dafb.png"
     }
 ]

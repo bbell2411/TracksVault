@@ -7,31 +7,31 @@ module.exports = [
     {
       name: "partying",
       username: "alex010",
-      avatar_url: "https://i.pinimg.com/236x/8c/ea/dc/8ceadc784ea3bb5dc395b733f11ce770.jpg"
+      avatar_url: "https://wallpapers.com/images/hd/random-pfp-of-fish-with-sunglasses-2wqsn5a94wc04vpv.jpg"
     },
     {
       name: "drive N listen",
       username: "marzxo",
-      avatar_url: "https://i.pinimg.com/736x/c4/dd/a4/c4dda4adc789d97a96095973e6129251.jpg"
+      avatar_url: "https://art.ngfiles.com/images/5332000/5332446_355359_skykidthebaxter_new-year-new-pfp.8a0ebc4ebad3409e0ace10352845d436.webp?f1704167896"
     },
     {
       name: "late night coding",
       username: "sabrinacarpenter",
-      avatar_url: "https://i.pinimg.com/236x/1d/38/f8/1d38f8c4fdf7297058a5be9d3f80fce6.jpg"
+      avatar_url: "https://i.pinimg.com/236x/ef/32/21/ef3221c674408f1b1623c9e872ac5a66.jpg"
     },
     {
       name: "workout jams",
       username: "dojacode",
-      avatar_url: "https://i.pinimg.com/236x/d6/c5/3d/d6c53df7a91d1cfb708016fa799de030.jpg"
+      avatar_url: "https://i.pinimg.com/custom_covers/200x150/696861811030496815_1621550002.jpg"
     },
     {
       name: "road trip classics",
       username: "remszn",
-      avatar_url: "https://i.pinimg.com/236x/4a/85/5e/4a855e7ea3b3a33ac2cd23e63e3d4ae9.jpg"
+      avatar_url: "https://pm1.aminoapps.com/6835/2875a449eb4192381729ef1cd0c3a72dd12229f5v2_hq.jpg"
     },
     {
       name: "party anthems",
       username: "icedoutspice",
-      avatar_url: "https://i.pinimg.com/236x/9a/1b/f2/9a1bf2d6dcd198f9a87a34c03e6f7c9a.jpg"
+      avatar_url: "https://pm1.aminoapps.com/6835/45605b327fd74999a9a700811dafb79f5e8db865v2_hq.jpg"
     }
   ]

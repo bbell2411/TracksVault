@@ -20,15 +20,16 @@ export default function HomeScreen() {
       .finally(() => {
         setIsLoading(false)
       })
-  }, [playlists])
-  // if (isLoading) {
-  //   return (
-  //     <View style={styles.center}>
-  //       <ActivityIndicator size="large" />
-  //       <Text>Loading playlists...</Text>
-  //     </View>
-  //   )
-  //}
+  }, [])
+
+  if (isLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+        <Text>Loading playlists...</Text>
+      </View>
+    )
+  }
 
   if (isError) {
     return (
@@ -44,11 +45,12 @@ export default function HomeScreen() {
         <Text style={styles.heading}>Playlists</Text>
         <FlatList
           data={playlists}
-          keyExtractor={(item, index) => item.name + index}
-          contentContainerStyle={{ paddingBottom: 20 }} // Optional: prevents clipping on last card
+          keyExtractor={(item, index) => item.playlist_id.toString()}
+          contentContainerStyle={{ paddingBottom: 20 }}
           renderItem={({ item }) => (
+            console.log(item),
             <View style={styles.card}>
-              <Text style={styles.playlistName}>{item.name}</Text>
+              <Text style={styles.name}>{item.name}</Text>
               <Text>By: {item.user_id}</Text>
               <Image
                 source={{ uri: item.avatar_url ? item.avatar_url : 'https://i.pinimg.com/1200x/35/99/27/359927d1398df943a13c227ae0468357.jpg' }}
