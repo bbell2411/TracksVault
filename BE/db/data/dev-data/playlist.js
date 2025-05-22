@@ -2,7 +2,7 @@ module.exports = [
     {
       name: "chill vibes",
       username: "alex010",
-      avatar_url: "https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2Fuxlejlw4g0ba1.jpg"
+      avatar_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKB2lKZ8BZscGHQLjpqkrCStdYmuc-HgQxCQ&s"
     },
     {
       name: "partying",
