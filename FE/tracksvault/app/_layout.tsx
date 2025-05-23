@@ -6,3 +6,5 @@ export default function RootLayout() {
   <Stack.Screen name="(tabs)/index" options={{ headerShown: false }} />
   </Stack>
 }
+//make notes on navigation
+//make plasylist clickable and render playlist songs by id
