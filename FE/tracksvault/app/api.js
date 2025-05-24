@@ -10,3 +10,10 @@ export const getPlaylists = () => {
       return data
     })
 }
+
+export const getPlaylistSongs = (playlistId) => {
+  return API.get(`/playlists/${playlistId}/songs`)
+    .then(({ data }) => {
+      return data
+    })
+}

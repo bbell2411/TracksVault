@@ -32,7 +32,8 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs,
             song_id serial primary key,
             song_name text not null,
             artist INT REFERENCES artists(artist_id) not null,
-            link text
+            link text,
+            image text
             )`)
         })
         .then(() => {
@@ -78,10 +79,10 @@ const seed = ({ songsData, artistsData, usersData, playlistData, playlist_songs,
         })
         .then((artistsInserted) => {
             const nestedArray = formatSongs(songsData, artistsInserted.rows).map((song) => {
-                return [song.song_name, song.artist_id, song.link]
+                return [song.song_name, song.artist_id, song.link, song.image]
             })
             const sql = format(`insert into songs 
-            (song_name, artist, link)
+            (song_name, artist, link, image)
             values
             %L
             returning *`, nestedArray)
