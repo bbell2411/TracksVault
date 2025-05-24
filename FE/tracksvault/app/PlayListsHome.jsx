@@ -109,7 +109,7 @@ export default function PlayListsHome() {
                     style={styles.playButton}
                     onPress={() => {router.push(`/playlist/${item.playlist_id}`)}}
                   >
-                    <Text style={styles.playButtonText}>▶ Play</Text>
+                    <Text style={styles.playButtonText}>▶ View</Text>
                   </TouchableOpacity>
                 </Animated.View>
               )

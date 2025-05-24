@@ -17,3 +17,19 @@ export const getPlaylistSongs = (playlistId) => {
       return data
     })
 }
+
+ export const getUsersByPlaylistId = (playlistId) => {
+  return API.get(`/playlists/${playlistId}`)
+    .then(({ data }) => {
+      return data
+    })
+    
+  }
+  
+  export const getUser = (userId) => {
+    console.log(userId)
+    return API.get(`/users/${userId}`)
+    .then(({ data }) => {
+      return data
+    })
+}
