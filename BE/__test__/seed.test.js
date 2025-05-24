@@ -137,6 +137,18 @@ describe('seed', () => {
                     expect(column.data_type).toBe('text');
                 })
         })
+        test('songs table has image as a column', () => {
+            return db.query(
+                `SELECT *
+                        FROM information_schema.columns
+                        WHERE table_name = 'songs'
+                        AND column_name = 'image';`
+            )
+                .then(({ rows: [column] }) => {
+                    expect(column.column_name).toBe('image');
+                    expect(column.data_type).toBe('text');
+                })
+        })
     })
     describe('artists table', () => {
         test('artists table exists', () => {
@@ -370,7 +382,8 @@ describe('seed', () => {
                     expect(song).toHaveProperty('song_id');
                     expect(song).toHaveProperty('song_name');
                     expect(song).toHaveProperty('artist');
-                    expect(song).toHaveProperty('link');
+                    expect(song).toHaveProperty('link')
+                    expect(song).toHaveProperty('image');
                 });
             });
         })
