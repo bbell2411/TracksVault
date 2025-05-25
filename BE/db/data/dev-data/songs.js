@@ -1,4 +1,4 @@
-import coverPlaceholder from "coberPlaceholder.png"
+const coverPlaceholder = '../assets/images/coverPlaceholder.png';
 module.exports = [
   {
     song_name: "Si no es contigo",
