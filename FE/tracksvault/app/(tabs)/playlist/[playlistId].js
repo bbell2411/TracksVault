@@ -1,5 +1,5 @@
-import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState, useRef, use } from "react";
+import { useLocalSearchParams } from "expo-router"
+import { useEffect, useState, useRef } from "react"
 import {
   View,
   Text,
@@ -10,9 +10,8 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { BlurView } from 'expo-blur'
-import MusicNoteLoading from "../../MusicNoteLoading";
+import MusicNoteLoading from "../../components/MusicNoteLoading";
 import { getPlaylistSongs, getUser, getUsersByPlaylistId } from "../../api";
-import coverPlaceholder from '../../../assets/images/coverPlaceholder.png'
 import { useRouter } from "expo-router"
 const router = useRouter()
 
@@ -27,8 +26,6 @@ export default function PlaylistSongs() {
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(null)
 
-  const [pause, setPause] = useState(false)
-  const [buttonText, setButtonText] = useState('Play')
   const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
@@ -41,21 +38,21 @@ export default function PlaylistSongs() {
     [])
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     getUsersByPlaylistId(playlistId)
       .then(({ playlist }) => setUser(playlist))
       .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false))
-  }, [])
+      .finally(() => setIsLoading(false));
+  }, [playlistId])
 
   useEffect(() => {
-    setIsLoading(true)
-    if (!userId) return
+    if (!userId) return;
+    setIsLoading(true);
     getUser(userId.user_id)
       .then(({ user }) => setPfp(user.avatar_url))
       .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false))
-  }, [])
+      .finally(() => setIsLoading(false));
+  }, [userId])
 
   const scrollX = useRef(new Animated.Value(0)).current
   const { width } = Dimensions.get('window')
@@ -86,8 +83,27 @@ export default function PlaylistSongs() {
         style={{ flex: 1, paddingTop: 40, paddingHorizontal: 20 }}
       >
         <Text style={styles.heading}>
-          Playlist Songs
+          {userId.name}
         </Text>
+        <Image
+          source={{
+            uri: pfp
+          }}
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 50,
+            marginBottom: 16,
+          }}
+        />
+        <Text style={{
+          fontSize: 20,
+          fontWeight: '700',
+          color: colors.accent,
+          marginBottom: 16,
+          fontFamily: 'System',
+
+        }}>{userId.user_id}</Text>
         <Animated.FlatList
           data={songsData}
           keyExtractor={(item, index) =>
@@ -127,7 +143,7 @@ export default function PlaylistSongs() {
               >
                 <Image
                   source={{
-                    uri: item.image ? item.image : coverPlaceholder
+                    uri: item.image
                   }}
                   style={styles.songPic}
                 />
@@ -135,12 +151,11 @@ export default function PlaylistSongs() {
                 <TouchableOpacity
                   style={styles.playButton}
                   onPress={() => {
-                    setPause(true);
-                    setButtonText('Pause');
-                    router.push(`/songs/${item.song_id}`);
+                    setIsPlaying((prev) => !prev)
+                    router.push(`/songs/${item.song_id}`)
                   }}
                 >
-                  <Text style={styles.playButtonText}>{buttonText}</Text>
+                  <Text style={styles.playButtonText}>{isPlaying ? 'Pause' : 'Play'}</Text>
                 </TouchableOpacity>
               </Animated.View>
             )
@@ -230,9 +245,6 @@ const styles = StyleSheet.create({
   },
 })
 
-//cover placeholder on the backend
-//layout pfp on the screen aswell username (marz's playlist)
-//pause and unpause button that changes when clicked multiple times
 // skip to the next song or go back to the previous song
 
 //OTHER-
