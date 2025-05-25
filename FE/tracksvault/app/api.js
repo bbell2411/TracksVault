@@ -27,7 +27,6 @@ export const getPlaylistSongs = (playlistId) => {
   }
   
   export const getUser = (userId) => {
-    console.log(userId)
     return API.get(`/users/${userId}`)
     .then(({ data }) => {
       return data

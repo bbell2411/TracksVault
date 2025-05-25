@@ -11,13 +11,13 @@ const TabLayout = () => {
             headerShown: false,
             }}
         />
-        <Tabs.Screen
+        {/* <Tabs.Screen
             name="settings"
             options={{
             title: 'Settings',
             headerShown: false,
             }}
-        />
+        /> */}
     </Tabs>  
   );
 };

@@ -11,7 +11,7 @@ import {
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
 import MusicNoteLoading from './MusicNoteLoading'
-import { getPlaylists } from './api'
+import { getPlaylists } from '../api'
 import {useRouter} from 'expo-router'
 const router= useRouter()
 export default function PlayListsHome() {
