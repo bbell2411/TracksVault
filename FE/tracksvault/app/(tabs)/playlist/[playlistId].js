@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router"
+import { useLocalSearchParams, useRouter } from "expo-router"
 import { useEffect, useState, useRef } from "react"
 import {
   View,
@@ -8,13 +8,12 @@ import {
   Animated,
   Dimensions,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native'
-import { BlurView } from 'expo-blur'
 import MusicNoteLoading from "../../components/MusicNoteLoading";
+import { LinearGradient } from 'expo-linear-gradient';
 import { getPlaylistSongs, getUser, getUsersByPlaylistId } from "../../api";
-import { useRouter } from "expo-router"
 const router = useRouter()
-
 
 export default function PlaylistSongs() {
   const { playlistId } = useLocalSearchParams()
@@ -26,7 +25,7 @@ export default function PlaylistSongs() {
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(null)
 
-  const [isPlaying, setIsPlaying] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     setIsLoading(true)
@@ -76,34 +75,29 @@ export default function PlaylistSongs() {
     { key: 'right-spacer', spacer: true }
   ]
   return (
-    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(5, 20, 102, 0.58)' }}>
-      <BlurView
-        intensity={80}
-        tint="light"
-        style={{ flex: 1, paddingTop: 40, paddingHorizontal: 20 }}
-      >
+    <View style={{ flex: 1 }}>
+       <LinearGradient
+      colors={['#0a0a0a', '#66CDAA']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={StyleSheet.absoluteFill}
+    >
+    <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.heading}>
           {userId.name}
         </Text>
-        <Image
-          source={{
-            uri: pfp
-          }}
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 50,
-            marginBottom: 16,
-          }}
-        />
-        <Text style={{
-          fontSize: 20,
-          fontWeight: '700',
-          color: colors.accent,
-          marginBottom: 16,
-          fontFamily: 'System',
-
-        }}>{userId.user_id}</Text>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+        <View style={styles.ownerInfo}>
+          <Image
+            source={{ uri: pfp }}
+            style={styles.ownerPfp}
+          />
+          <Text style={styles.ownerUsername}>
+            {userId.user_id}
+          </Text>
+        </View>
         <Animated.FlatList
           data={songsData}
           keyExtractor={(item, index) =>
@@ -151,23 +145,22 @@ export default function PlaylistSongs() {
                 <TouchableOpacity
                   style={styles.playButton}
                   onPress={() => {
-                    setIsPlaying((prev) => !prev)
                     router.push(`/songs/${item.song_id}`)
                   }}
                 >
-                  <Text style={styles.playButtonText}>{isPlaying ? 'Pause' : 'Play'}</Text>
+                  <Text style={styles.playButtonText}>Listen</Text>
                 </TouchableOpacity>
               </Animated.View>
             )
           }}
         />
-      </BlurView>
+    </ScrollView>
+    </LinearGradient>
     </View>
   )
 }
+//ADD SAVE/VOTE
 const colors = {
-  solidBackground: '#0d0b1f',
-  gradientBackground: ['#6495ED', 'rgba(13, 11, 31, 0.9)'],
   card: 'hsla(250, 25%, 15%, 0.6)',
   text: '#e0e0e0',
   accent: '#FFF0F5',
@@ -175,6 +168,9 @@ const colors = {
 }
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    paddingVertical: 40,
+  },
   heading: {
     fontSize: 50,
     fontWeight: '700',
@@ -202,10 +198,10 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   name: {
-    fontSize: 45,
+    fontSize: 40,
     fontWeight: '700',
     color: colors.text,
-    marginTop: 12,
+    marginTop: 16,
     paddingHorizontal: 16,
     fontFamily: 'System',
     letterSpacing: 0.5,
@@ -218,6 +214,28 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
     opacity: 0.85,
   },
+  ownerInfo: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    alignItems: 'center',
+    zIndex: 10,
+  },
+
+  ownerPfp: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginBottom: 4,
+  },
+
+  ownerUsername: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.accent,
+    textAlign: 'center',
+    fontFamily: 'System',
+  },
   center: {
     flex: 1,
     justifyContent: 'center',
@@ -226,7 +244,7 @@ const styles = StyleSheet.create({
   playButton: {
     backgroundColor: '#9D4EDD',
     paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingHorizontal: 40,
     borderRadius: 30,
     marginTop: 12,
     marginBottom: 16,
@@ -243,12 +261,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
+  backButton: {
+    position: 'absolute',
+    top: 10,
+    left: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    zIndex: 10,
+  },
+
+  backButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 })
-
-// skip to the next song or go back to the previous song
-
-//OTHER-
-//User context with login page
-//User profile page, settings (patches)
-//search bar
-//posts
