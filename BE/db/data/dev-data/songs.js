@@ -115,15 +115,15 @@ module.exports = [
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2VyagOoa9dWtOPUPE4k53baDunpV0hxPQXA&s"
   },
   {
-    song_name: "Creepin'",
+    song_name: "Creepin",
     artist: "Metro Boomin",
     link: "https://www.youtube.com/watch?v=txI4AI0k-Qc",
-    image: coverPlaceholder
+    image: 'https://images.genius.com/f3d1d78ded7a82fe8bc7ec6441eb9018.1000x996x1.jpg'
   }, 
   {
     song_name: "redrum",
     artist: "21 Savage",
     link: "https://i.ytimg.com/vi/ukbiRcyzrpc/sddefault.jpg",
-    image: coverPlaceholder
+    image: 'https://i1.sndcdn.com/artworks-5qjOk90bFQyL-0-t500x500.jpg'
   }
 ];

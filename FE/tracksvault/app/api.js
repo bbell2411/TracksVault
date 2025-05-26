@@ -32,3 +32,17 @@ export const getPlaylistSongs = (playlistId) => {
       return data
     })
 }
+
+export const getSong = (songId) => {
+  return API.get(`/songs/${songId}`)
+    .then(({ data }) => {
+      return data
+    })
+}
+
+export const getArtist = (artistId) => {
+  return API.get(`/artists/${artistId}`)
+    .then(({ data }) => {
+      return data
+    })
+}
