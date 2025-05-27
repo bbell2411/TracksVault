@@ -12,8 +12,8 @@ import {
 } from 'react-native'
 import { Audio } from 'expo-audio'
 import MusicNoteLoading from "../../components/MusicNoteLoading"
-import { getArtist, getSong } from "../../api";
-
+import { getArtist, getSong } from "../../api"
+import playButton from "../../../assets/images/playButton.png"
 
 
 export default function playSong() {
@@ -43,28 +43,39 @@ export default function playSong() {
             .catch(() => setIsError(true))
             .finally(() => setIsLoading(false))
     }, [song])
+
     // useEffect(() => {
     //     if (!song || !song.link) return
 
-    //     let soundObject
+    //     let isMounted = true
+    //     let soundObject = null
 
     //     const playSound = async () => {
-    //         const { sound } = await Audio.Sound.createAsync(
-    //             { uri: song.link },
-    //             { shouldPlay: true }
-    //         )
-    //         soundObject = sound
-    //         setSound(sound)
+    //         try {
+    //             const { sound } = await Audio.Sound.createAsync(
+    //                 { uri: song.link },
+    //                 { shouldPlay: true }
+    //             )
+
+    //             if (isMounted) {
+    //                 soundObject = sound
+    //                 setSound(sound)
+    //             }
+    //         } catch (err) {
+    //             if (isMounted) setIsError(true)
+    //         }
     //     }
 
-    //     playSound().catch(() => setIsError(true))
+    //     playSound()
 
     //     return () => {
+    //         isMounted = false
     //         if (soundObject) {
     //             soundObject.unloadAsync()
     //         }
     //     }
     // }, [song])
+
 
     if (isLoading) {
         return <MusicNoteLoading />
@@ -84,19 +95,32 @@ export default function playSong() {
             end={{ x: 1, y: 1 }}
             style={styles.background}
         >
-              <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                    <Text style={{ color: '#fff', fontSize: 18 }}>← Back</Text>
-                </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                <Text style={{ color: '#fff', fontSize: 18 }}>← Back</Text>
+            </TouchableOpacity>
             <View style={styles.container}>
                 <Image source={{ uri: song.image }} style={styles.coverImage} />
                 <Text style={styles.songTitle}>{song.song_name}</Text>
                 <Text style={styles.artistName}>{artists.artists_name}</Text>
-                <TouchableOpacity onPress={() => sound ? sound.pauseAsync() : null}>
-                    <Text style={{ color: '#fff', fontSize: 18, marginTop: 20 }}>
-                        {sound ? 'Pause' : 'Play'}
-                    </Text>
+                <TouchableOpacity
+                    onPress={() => {
+                        if (sound) {
+                            sound.pauseAsync()
+                        }
+                    }}
+                    style={{ marginTop: 20 }}
+                >
+                    {sound ? (
+                        <Text style={{ color: '#fff', fontSize: 18 }}>Pause</Text>
+                    ) : (
+                        <Image
+                            source={playButton}
+                            style={{ width: 40, height: 40, tintColor: 'white' }}
+                        />
+                    )}
                 </TouchableOpacity>
-              
+
+
             </View>
         </LinearGradient>
     )
@@ -148,3 +172,4 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
 })
+//make play button back button next song button and repeat button and shuffle button
