@@ -4,21 +4,21 @@ const API = axios.create({
   baseURL: 'https://tracksvault.onrender.com/api',
 })
 
-export const getPlaylists = () => {
+export function getPlaylists(){
   return API.get('/playlists')
     .then(({ data }) => {
       return data
     })
 }
 
-export const getPlaylistSongs = (playlistId) => {
+export function getPlaylistSongs(playlistId){
   return API.get(`/playlists/${playlistId}/songs`)
     .then(({ data }) => {
       return data
     })
 }
 
- export const getUsersByPlaylistId = (playlistId) => {
+ export function getUsersByPlaylistId(playlistId){
   return API.get(`/playlists/${playlistId}`)
     .then(({ data }) => {
       return data
@@ -26,21 +26,21 @@ export const getPlaylistSongs = (playlistId) => {
     
   }
   
-  export const getUser = (userId) => {
+  export function getUser(userId){
     return API.get(`/users/${userId}`)
     .then(({ data }) => {
       return data
     })
 }
 
-export const getSong = (songId) => {
+export function getSong(songId){
   return API.get(`/songs/${songId}`)
     .then(({ data }) => {
       return data
     })
 }
 
-export const getArtist = (artistId) => {
+export function  getArtist(artistId){
   return API.get(`/artists/${artistId}`)
     .then(({ data }) => {
       return data

@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { Audio } from 'expo-av';
 import MusicNoteLoading from "../../components/MusicNoteLoading"
-import { getArtist, getSong } from "../../api"
+import { getArtist, getSong } from "../../../utils/api"
 import playButton from "../../../assets/images/playButton.png"
 import pause from "../../../assets/images/pause.png"
 
@@ -65,20 +65,15 @@ export default function playSong() {
 
         loadSound();
 
-        return () => {
-            if (sound) {
-                sound.unloadAsync();
-            }
-        };
     }, [])
 
-    // useEffect(() => {
-    //     return () => {
-    //         if (soundRef.current) {
-    //             soundRef.current.unloadAsync();
-    //         }
-    //     };
-    // }, []);
+    useEffect(() => {
+        return () => {
+            if (soundRef.current) {
+                soundRef.current.unloadAsync();
+            }
+        };
+    }, []);
 
     if (isLoading) {
         return <MusicNoteLoading />
@@ -91,11 +86,7 @@ export default function playSong() {
             </View>
         )
     }
-    async function getTrack(trackId) {
-        const response = await fetch(`https://api.deezer.com/track/${trackId}`);
-        const data = await response.json();
-        return data;
-    }
+
     return (
         <LinearGradient
             colors={['#0a0a0a', '#66CDAA']}
@@ -115,7 +106,7 @@ export default function playSong() {
                         try {
                             if (!soundRef.current) {
                                 const { sound } = await Audio.Sound.createAsync({
-                                    uri: ""
+                                    uri: dummyAudio
                                 });
                                 soundRef.current = sound;
                             }
@@ -140,9 +131,9 @@ export default function playSong() {
                     style={{ marginTop: 20 }}
                 >
                     {isPlaying ? (
-                        <Image source={pause} style={styles.playIcon} />
+                        <Image source={pause} style={styles.playIcon} tintColor="white"/>
                     ) : (
-                        <Image source={playButton} style={styles.playIcon} />
+                        <Image source={playButton} style={styles.playIcon} tintColor="white" />
                     )}
                 </TouchableOpacity>
 
@@ -201,7 +192,6 @@ const styles = StyleSheet.create({
     playIcon: {
         width: 30,
         height: 30,
-        tintColor: '#fff',          // white icon color
     },
 })
 //make play button back button next song button and repeat button and shuffle button

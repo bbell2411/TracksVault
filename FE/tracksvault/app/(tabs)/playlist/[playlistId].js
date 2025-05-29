@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import MusicNoteLoading from "../../components/MusicNoteLoading";
 import { LinearGradient } from 'expo-linear-gradient';
-import { getPlaylistSongs, getUser, getUsersByPlaylistId } from "../../api";
+import { getPlaylistSongs, getUser, getUsersByPlaylistId } from "../../../utils/api";
 const router = useRouter()
 
 export default function PlaylistSongs() {
