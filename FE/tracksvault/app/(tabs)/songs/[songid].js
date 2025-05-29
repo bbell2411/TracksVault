@@ -14,6 +14,7 @@ import { Audio } from 'expo-av';
 import MusicNoteLoading from "../../components/MusicNoteLoading"
 import { getArtist, getSong } from "../../api"
 import playButton from "../../../assets/images/playButton.png"
+import pause from "../../../assets/images/pause.png"
 
 
 export default function playSong() {
@@ -71,11 +72,11 @@ export default function playSong() {
 
     useEffect(() => {
         return () => {
-          if (soundRef.current) {
-            soundRef.current.unloadAsync();
-          }
+            if (soundRef.current) {
+                soundRef.current.unloadAsync();
+            }
         };
-      }, []);
+    }, []);
 
 
     if (isLoading) {
@@ -89,6 +90,7 @@ export default function playSong() {
             </View>
         )
     }
+
     return (
         <LinearGradient
             colors={['#0a0a0a', '#66CDAA']}
@@ -132,9 +134,11 @@ export default function playSong() {
                     }}
                     style={{ marginTop: 20 }}
                 >
-                    <Text style={{ color: '#fff', fontSize: 18 }}>
-                        {isPlaying ? 'Pause' : 'Play'}
-                    </Text>
+                    {isPlaying ? (
+                       <Image source={pause} style={styles.playIcon} />
+                    ) : (
+                        <Image source={playButton} style={styles.playIcon} />
+                    )}
                 </TouchableOpacity>
 
 
@@ -188,6 +192,11 @@ const styles = StyleSheet.create({
     errorText: {
         color: 'red',
         fontSize: 18,
+    },
+    playIcon: {
+        width: 30,
+        height: 30,
+        tintColor: '#fff',          // white icon color
     },
 })
 //make play button back button next song button and repeat button and shuffle button
