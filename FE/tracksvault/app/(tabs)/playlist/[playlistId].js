@@ -9,6 +9,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
 } from 'react-native'
 import MusicNoteLoading from "../../components/MusicNoteLoading";
 import { LinearGradient } from 'expo-linear-gradient';
@@ -89,7 +90,7 @@ export default function PlaylistSongs() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
-        <View style={styles.ownerInfo}>
+        <SafeAreaView style={styles.ownerInfo}>
           <Image
             source={{ uri: pfp }}
             style={styles.ownerPfp}
@@ -97,7 +98,7 @@ export default function PlaylistSongs() {
           <Text style={styles.ownerUsername}>
             {userId.user_id}
           </Text>
-        </View>
+        </SafeAreaView>
         <Animated.FlatList
           data={songsData}
           keyExtractor={(item, index) =>

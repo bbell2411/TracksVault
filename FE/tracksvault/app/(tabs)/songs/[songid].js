@@ -22,7 +22,6 @@ export default function playSong() {
     const [song, setSong] = useState(null)
     const [artists, setArtists] = useState([])
 
-    const [sound, setSound] = useState(null)
     const soundRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
 
@@ -49,31 +48,62 @@ export default function playSong() {
             .finally(() => setIsLoading(false))
     }, [song])
 
-    const dummyAudio = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+    const dummyAudio = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+
 
     useEffect(() => {
-
         const loadSound = async () => {
             try {
-                const { sound } = await Audio.Sound.createAsync({ uri: dummyAudio });
-                setSound(sound);
+                await Audio.setAudioModeAsync({
+                    staysActiveInBackground: true,
+                    allowsRecordingIOS: false,
+                    playsInSilentModeIOS: true,
+                });
+
+                const { sound } = await Audio.Sound.createAsync(
+                    { uri: dummyAudio }
+                );
+
+                soundRef.current = sound;
             } catch (err) {
-                console.error('Failed to load preview:', err);
-                setIsError(true);
+                console.error("Failed to load sound:", err);
             }
         };
 
-        loadSound();
+        loadSound()
 
-    }, [])
-
-    useEffect(() => {
         return () => {
             if (soundRef.current) {
                 soundRef.current.unloadAsync();
             }
         };
-    }, []);
+    }, [])
+
+    const togglePlayback = async () => {
+        try {
+            if (!soundRef.current) {
+                console.warn("Sound not loaded yet.");
+                return;
+            }
+
+            const status = await soundRef.current.getStatusAsync();
+
+            if (status.isLoaded) {
+                if (status.isPlaying) {
+                    await soundRef.current.pauseAsync();
+                    setIsPlaying(false);
+                } else {
+                    await soundRef.current.playAsync();
+                    setIsPlaying(true);
+                }
+            } else {
+                console.warn("Sound not loaded properly.");
+            }
+        } catch (err) {
+            console.error("Playback error:", err);
+        }
+    };
+
 
     if (isLoading) {
         return <MusicNoteLoading />
@@ -101,37 +131,9 @@ export default function playSong() {
                 <Image source={{ uri: song.image }} style={styles.coverImage} />
                 <Text style={styles.songTitle}>{song.song_name}</Text>
                 <Text style={styles.artistName}>{artists.artists_name}</Text>
-                <TouchableOpacity
-                    onPress={async () => {
-                        try {
-                            if (!soundRef.current) {
-                                const { sound } = await Audio.Sound.createAsync({
-                                    uri: dummyAudio
-                                });
-                                soundRef.current = sound;
-                            }
-
-                            const status = await soundRef.current.getStatusAsync();
-
-                            if (status.isLoaded) {
-                                if (status.isPlaying) {
-                                    await soundRef.current.pauseAsync();
-                                    setIsPlaying(false);
-                                } else {
-                                    await soundRef.current.playAsync();
-                                    setIsPlaying(true);
-                                }
-                            } else {
-                                console.warn("Sound not loaded yet");
-                            }
-                        } catch (err) {
-                            console.error("Playback error:", err);
-                        }
-                    }}
-                    style={{ marginTop: 20 }}
-                >
+                <TouchableOpacity onPress={togglePlayback} style={{ marginTop: 20 }}>
                     {isPlaying ? (
-                        <Image source={pause} style={styles.playIcon} tintColor="white"/>
+                        <Image source={pause} style={styles.playIcon} tintColor="white" />
                     ) : (
                         <Image source={playButton} style={styles.playIcon} tintColor="white" />
                     )}

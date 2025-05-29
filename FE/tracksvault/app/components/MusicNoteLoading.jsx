@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { View, Animated, StyleSheet, Easing, Text } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 export default function MusicNoteLoading() {
   const bounceValue = useRef(new Animated.Value(0)).current
@@ -24,6 +26,12 @@ export default function MusicNoteLoading() {
   }, [bounceValue])
 
   return (
+     <LinearGradient
+          colors={['#0a0a0a', '#66CDAA']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        >
     <View style={styles.container}>
       <Animated.Text
         style={[
@@ -37,6 +45,7 @@ export default function MusicNoteLoading() {
       </Animated.Text>
       <Text style={styles.text}>Loading...</Text>
     </View>
+    </LinearGradient>
   )
 }
 
@@ -48,7 +57,7 @@ const styles = StyleSheet.create({
   },
   musicNote: {
     fontSize: 80,
-    color: '#9d4edd', // purple accent
+    color: '#9d4edd', 
   },
   text: {
     marginTop: 10,
