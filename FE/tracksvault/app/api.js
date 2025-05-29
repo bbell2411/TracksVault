@@ -46,3 +46,12 @@ export const getArtist = (artistId) => {
       return data
     })
 }
+const DEEZ = axios.create({
+  baseURL: 'https://cors-anywhere.herokuapp.com/https://api.deezer.com/search?q=track:',
+})
+export const deezer =(songname)=>{
+  return DEEZ.get(`${songname}`)
+  .then(({data})=>{
+    return data
+  })
+}

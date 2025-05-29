@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { Audio } from 'expo-av';
 import MusicNoteLoading from "../../components/MusicNoteLoading"
-import { getArtist, getSong } from "../../api"
+import { deezer, getArtist, getSong } from "../../api"
 import playButton from "../../../assets/images/playButton.png"
 import pause from "../../../assets/images/pause.png"
 
@@ -28,6 +28,7 @@ export default function playSong() {
 
     const [isLoading, setIsLoading] = useState(true)
     const [isError, setIsError] = useState(null)
+
 
     const router = useRouter()
 
@@ -77,8 +78,15 @@ export default function playSong() {
             }
         };
     }, []);
-
-
+    const [test, setTest] = useState(null)
+    useEffect(() => {
+        if (!song) return;
+        setIsLoading(true)
+        deezer(song.song_name)
+            .then(({ data }) => console.log(data))
+            .catch(() => setIsError(true))
+            .finally(() => setIsLoading(false))
+    }, [song])
     if (isLoading) {
         return <MusicNoteLoading />
     }
@@ -90,7 +98,11 @@ export default function playSong() {
             </View>
         )
     }
-
+    async function getTrack(trackId) {
+        const response = await fetch(`https://api.deezer.com/track/${trackId}`);
+        const data = await response.json();
+        return data;
+    }
     return (
         <LinearGradient
             colors={['#0a0a0a', '#66CDAA']}
@@ -110,7 +122,7 @@ export default function playSong() {
                         try {
                             if (!soundRef.current) {
                                 const { sound } = await Audio.Sound.createAsync({
-                                    uri: song.link
+                                    uri: ""
                                 });
                                 soundRef.current = sound;
                             }
@@ -135,7 +147,7 @@ export default function playSong() {
                     style={{ marginTop: 20 }}
                 >
                     {isPlaying ? (
-                       <Image source={pause} style={styles.playIcon} />
+                        <Image source={pause} style={styles.playIcon} />
                     ) : (
                         <Image source={playButton} style={styles.playIcon} />
                     )}
