@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { LinearGradient } from 'expo-linear-gradient';
 import {
     View,
@@ -10,7 +10,7 @@ import {
     Dimensions,
     TouchableOpacity,
 } from 'react-native'
-import { Audio } from 'expo-audio'
+import { Audio } from 'expo-av';
 import MusicNoteLoading from "../../components/MusicNoteLoading"
 import { getArtist, getSong } from "../../api"
 import playButton from "../../../assets/images/playButton.png"
@@ -22,6 +22,9 @@ export default function playSong() {
     const [artists, setArtists] = useState([])
 
     const [sound, setSound] = useState(null)
+    const soundRef = useRef(null)
+    const [isPlaying, setIsPlaying] = useState(false)
+
     const [isLoading, setIsLoading] = useState(true)
     const [isError, setIsError] = useState(null)
 
@@ -44,37 +47,35 @@ export default function playSong() {
             .finally(() => setIsLoading(false))
     }, [song])
 
-    // useEffect(() => {
-    //     if (!song || !song.link) return
+    useEffect(() => {
+        if (!song || !song.link) return;
 
-    //     let isMounted = true
-    //     let soundObject = null
+        const loadSound = async () => {
+            try {
+                const { sound } = await Audio.Sound.createAsync({ uri: "https:\/\/cdnt-preview.dzcdn.net\/api\/1\/1\/0\/e\/6\/0\/0e653e8f7d371aa90a86054d6bd98222.mp3?hdnea=exp=1748469122~acl=\/api\/1\/1\/0\/e\/6\/0\/0e653e8f7d371aa90a86054d6bd98222.mp3*~data=user_id=0,application_id=42~hmac=059a91c4ff7219ee23410fe5ef7eef2887d2d16252d3a937425e15be63ed4ea5" });
+                setSound(sound);
+            } catch (err) {
+                console.error('Failed to load preview:', err);
+                setIsError(true);
+            }
+        };
 
-    //     const playSound = async () => {
-    //         try {
-    //             const { sound } = await Audio.Sound.createAsync(
-    //                 { uri: song.link },
-    //                 { shouldPlay: true }
-    //             )
+        loadSound();
 
-    //             if (isMounted) {
-    //                 soundObject = sound
-    //                 setSound(sound)
-    //             }
-    //         } catch (err) {
-    //             if (isMounted) setIsError(true)
-    //         }
-    //     }
+        return () => {
+            if (sound) {
+                sound.unloadAsync();
+            }
+        };
+    }, [song])
 
-    //     playSound()
-
-    //     return () => {
-    //         isMounted = false
-    //         if (soundObject) {
-    //             soundObject.unloadAsync()
-    //         }
-    //     }
-    // }, [song])
+    useEffect(() => {
+        return () => {
+          if (soundRef.current) {
+            soundRef.current.unloadAsync();
+          }
+        };
+      }, []);
 
 
     if (isLoading) {
@@ -103,22 +104,39 @@ export default function playSong() {
                 <Text style={styles.songTitle}>{song.song_name}</Text>
                 <Text style={styles.artistName}>{artists.artists_name}</Text>
                 <TouchableOpacity
-                    onPress={() => {
-                        if (sound) {
-                            sound.pauseAsync()
+                    onPress={async () => {
+                        try {
+                            if (!soundRef.current) {
+                                const { sound } = await Audio.Sound.createAsync({
+                                    uri: song.link
+                                });
+                                soundRef.current = sound;
+                            }
+
+                            const status = await soundRef.current.getStatusAsync();
+
+                            if (status.isLoaded) {
+                                if (status.isPlaying) {
+                                    await soundRef.current.pauseAsync();
+                                    setIsPlaying(false);
+                                } else {
+                                    await soundRef.current.playAsync();
+                                    setIsPlaying(true);
+                                }
+                            } else {
+                                console.warn("Sound not loaded yet");
+                            }
+                        } catch (err) {
+                            console.error("Playback error:", err);
                         }
                     }}
                     style={{ marginTop: 20 }}
                 >
-                    {sound ? (
-                        <Text style={{ color: '#fff', fontSize: 18 }}>Pause</Text>
-                    ) : (
-                        <Image
-                            source={playButton}
-                            style={{ width: 40, height: 40, tintColor: 'white' }}
-                        />
-                    )}
+                    <Text style={{ color: '#fff', fontSize: 18 }}>
+                        {isPlaying ? 'Pause' : 'Play'}
+                    </Text>
                 </TouchableOpacity>
+
 
 
             </View>
