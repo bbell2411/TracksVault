@@ -7,6 +7,8 @@ import {
   Animated,
   Dimensions,
   TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native'
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -47,17 +49,16 @@ export default function PlayListsHome() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(5, 20, 102, 0.58)' }} />
-
-      <BlurView
-        intensity={80}
-        tint="light"
-        style={{ flex: 1, paddingTop: 40, paddingHorizontal: 20 }}
-      >
-        <View style={{ flex: 1 }}>
-          <View style={{ alignItems: 'center', marginBottom: 24 }}>
+      <LinearGradient
+      colors={['#0a0a0a', '#66CDAA']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={StyleSheet.absoluteFill}
+    >
+        <ScrollView style={{ flex: 1 }}>
+          <SafeAreaView style={{ alignItems: 'center', marginBottom: 24 }}>
             <Text style={styles.heading}>Browse Playlists</Text>
-          </View>
+          </SafeAreaView>
 
           <Animated.FlatList
             data={playlistData}
@@ -115,8 +116,8 @@ export default function PlayListsHome() {
               )
             }}
           />
-        </View>
-      </BlurView>
+        </ScrollView>
+        </LinearGradient>
     </View>
   )
 
