@@ -8,7 +8,7 @@ module.exports = [
     { artists_name: "Rema" },
     { artists_name: "Billie Eilish" },
     { artists_name: "Drake" },
-    { artists_name: "Peso Pluma" },
+    { artists_name: "Lady Gaga" },
     { artists_name: "SZA" },
     { artists_name: "Central Cee" },
     { artists_name: "J. Cole" },
