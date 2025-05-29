@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { Audio } from 'expo-av';
 import MusicNoteLoading from "../../components/MusicNoteLoading"
-import { deezer, getArtist, getSong, prev } from "../../api"
+import { getArtist, getSong } from "../../api"
 import playButton from "../../../assets/images/playButton.png"
 import pause from "../../../assets/images/pause.png"
 
@@ -49,12 +49,13 @@ export default function playSong() {
             .finally(() => setIsLoading(false))
     }, [song])
 
+    const dummyAudio = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+
     useEffect(() => {
-        if (!song || !song.link) return;
 
         const loadSound = async () => {
             try {
-                const { sound } = await Audio.Sound.createAsync({ uri: "https:\/\/cdnt-preview.dzcdn.net\/api\/1\/1\/0\/e\/6\/0\/0e653e8f7d371aa90a86054d6bd98222.mp3?hdnea=exp=1748469122~acl=\/api\/1\/1\/0\/e\/6\/0\/0e653e8f7d371aa90a86054d6bd98222.mp3*~data=user_id=0,application_id=42~hmac=059a91c4ff7219ee23410fe5ef7eef2887d2d16252d3a937425e15be63ed4ea5" });
+                const { sound } = await Audio.Sound.createAsync({ uri: dummyAudio });
                 setSound(sound);
             } catch (err) {
                 console.error('Failed to load preview:', err);
@@ -69,24 +70,16 @@ export default function playSong() {
                 sound.unloadAsync();
             }
         };
-    }, [song])
+    }, [])
 
-    useEffect(() => {
-        return () => {
-            if (soundRef.current) {
-                soundRef.current.unloadAsync();
-            }
-        };
-    }, []);
-    const [test, setTest] = useState(null)
-    useEffect(()=>{
-        if (!song) return;
-        setIsLoading(true)
-        prev(song.song_name)
-        .then(({song})=>console.log(song))
-        .catch(() => setIsError(true))
-        .finally(() => setIsLoading(false))
-    },[song])
+    // useEffect(() => {
+    //     return () => {
+    //         if (soundRef.current) {
+    //             soundRef.current.unloadAsync();
+    //         }
+    //     };
+    // }, []);
+
     if (isLoading) {
         return <MusicNoteLoading />
     }

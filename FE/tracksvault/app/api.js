@@ -46,11 +46,3 @@ export const getArtist = (artistId) => {
       return data
     })
 }
-
-export const prev = (songName) => {
-  return API.get(`/deezer/search/${encodeURIComponent(songName)}`)
-    .then(({ data }) => {
-      console.log(data)
-      return data
-    })
-}
