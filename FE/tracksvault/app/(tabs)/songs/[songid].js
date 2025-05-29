@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { Audio } from 'expo-av';
 import MusicNoteLoading from "../../components/MusicNoteLoading"
-import { deezer, getArtist, getSong } from "../../api"
+import { deezer, getArtist, getSong, prev } from "../../api"
 import playButton from "../../../assets/images/playButton.png"
 import pause from "../../../assets/images/pause.png"
 
@@ -79,14 +79,14 @@ export default function playSong() {
         };
     }, []);
     const [test, setTest] = useState(null)
-    useEffect(() => {
+    useEffect(()=>{
         if (!song) return;
         setIsLoading(true)
-        deezer(song.song_name)
-            .then(({ data }) => console.log(data))
-            .catch(() => setIsError(true))
-            .finally(() => setIsLoading(false))
-    }, [song])
+        prev(song.song_name)
+        .then(({song})=>console.log(song))
+        .catch(() => setIsError(true))
+        .finally(() => setIsLoading(false))
+    },[song])
     if (isLoading) {
         return <MusicNoteLoading />
     }

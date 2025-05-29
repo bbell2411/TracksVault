@@ -44,19 +44,13 @@ app.delete("/api/users/:username/playlists/:playlist_id", deletePlaylist)
 app.delete('/api/users/:username', deleteUsers)
 app.delete('/api/users/:username/playlists/:playlist_id/songs/:song_id', deletePlaylistSongs)
 
-app.get('/api/deezer/search', async (req, res) => {
-    const track = req.query.track;
-    if (!track) {
-      return res.status(400).json({ error: 'Missing track query parameter' });
-    }
-  
+app.get('/api/deezer/search/:songName', async (req, res, next) => {
+    const { songName } = req.params;
     try {
-      const deezerResponse = await fetch(`https://api.deezer.com/search?q=track:"${encodeURIComponent(track)}"`);
-      const data = await deezerResponse.json();
-      res.json(data);
-    } catch (error) {
-      console.error('Deezer API error:', error);
-      res.status(500).json({ error: 'Failed to fetch data from Deezer' });
+      const { data } = await axios.get(`https://api.deezer.com/search?q=${encodeURIComponent(songName)}`);
+      res.status(200).send(data);
+    } catch (err) {
+      next(err);
     }
   });
 
