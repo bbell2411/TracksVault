@@ -54,6 +54,7 @@ export default function PlaylistSongs() {
       .finally(() => setIsLoading(false));
   }, [userId])
 
+
   const scrollX = useRef(new Animated.Value(0)).current
   const { width } = Dimensions.get('window')
   const ITEM_WIDTH = width * 0.72
@@ -77,89 +78,95 @@ export default function PlaylistSongs() {
   ]
   return (
     <View style={{ flex: 1 }}>
-       <LinearGradient
-      colors={['#0a0a0a', '#66CDAA']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={StyleSheet.absoluteFill}
-    >
-    <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.heading}>
-          {userId.name}
-        </Text>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backButtonText}>← Back</Text>
-        </TouchableOpacity>
-        <SafeAreaView style={styles.ownerInfo}>
-          <Image
-            source={{ uri: pfp }}
-            style={styles.ownerPfp}
-          />
-          <Text style={styles.ownerUsername}>
-            {userId.user_id}
+      <LinearGradient
+        colors={['#0a0a0a', '#66CDAA']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <Text style={styles.heading}>
+            {userId.name}
           </Text>
-        </SafeAreaView>
-        <Animated.FlatList
-          data={songsData}
-          keyExtractor={(item, index) =>
-            item.song_id?.toString() || `spacer-${index}`
-          }
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={ITEM_WIDTH}
-          decelerationRate="fast"
-          bounces={false}
-          contentContainerStyle={{ alignItems: 'center' }}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: true }
-          )}
-          scrollEventThrottle={16}
-          renderItem={({ item, index }) => {
-            if (!item.image) return <View style={{ width: SPACER_WIDTH }} />
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
+          <SafeAreaView style={styles.ownerInfo}>
+            <Image
+              source={{ uri: pfp }}
+              style={styles.ownerPfp}
+            />
+            <Text style={styles.ownerUsername}>
+              {userId.user_id}
+            </Text>
+          </SafeAreaView>
+          <Animated.FlatList
+            data={songsData}
+            keyExtractor={(item, index) =>
+              item.song_id?.toString() || `spacer-${index}`
+            }
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={ITEM_WIDTH}
+            decelerationRate="fast"
+            bounces={false}
+            contentContainerStyle={{ alignItems: 'center' }}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+              { useNativeDriver: true }
+            )}
+            scrollEventThrottle={16}
+            renderItem={({ item, index }) => {
+              if (!item.image) return <View style={{ width: SPACER_WIDTH }} />
 
-            const inputRange = [
-              (index - 2) * ITEM_WIDTH,
-              (index - 1) * ITEM_WIDTH,
-              index * ITEM_WIDTH,
-            ]
+              const inputRange = [
+                (index - 2) * ITEM_WIDTH,
+                (index - 1) * ITEM_WIDTH,
+                index * ITEM_WIDTH,
+              ]
 
-            const scale = scrollX.interpolate({
-              inputRange,
-              outputRange: [0.8, 1, 0.8],
-              extrapolate: 'clamp',
-            })
-            return (
-              <Animated.View
-                style={[
-                  styles.card,
-                  { width: ITEM_WIDTH, transform: [{ scale }] },
-                ]}
-              >
-                <Image
-                  source={{
-                    uri: item.image
-                  }}
-                  style={styles.songPic}
-                />
-                <Text style={styles.name}>{item.song_name}</Text>
-                <TouchableOpacity
-                  style={styles.playButton}
-                  onPress={() => {
-                    router.push(`/songs/${item.song_id}`)
-                  }}
+              const scale = scrollX.interpolate({
+                inputRange,
+                outputRange: [0.8, 1, 0.8],
+                extrapolate: 'clamp',
+              })
+              return (
+                <Animated.View
+                  style={[
+                    styles.card,
+                    { width: ITEM_WIDTH, transform: [{ scale }] },
+                  ]}
                 >
-                  <Text style={styles.playButtonText}>Listen</Text>
-                </TouchableOpacity>
-              </Animated.View>
-            )
-          }}
-        />
-    </ScrollView>
-    </LinearGradient>
+                  <Image
+                    source={{
+                      uri: item.image
+                    }}
+                    style={styles.songPic}
+                  />
+                  <Text style={styles.name}>{item.song_name}</Text>
+                  <TouchableOpacity
+                    style={styles.playButton}
+                    onPress={() => {
+                      router.push({
+                        pathname: `/songs/${item.song_id}`,
+                        params: {
+                          playlist: JSON.stringify(songs)
+                        }
+                      })
+                    }}
+                  >
+                    <Text style={styles.playButtonText}>Listen</Text>
+                  </TouchableOpacity>
+                </Animated.View>
+              )
+            }}
+          />
+        </ScrollView>
+      </LinearGradient>
     </View>
   )
 }
+
 //ADD SAVE/VOTE
 const colors = {
   card: 'hsla(250, 25%, 15%, 0.6)',

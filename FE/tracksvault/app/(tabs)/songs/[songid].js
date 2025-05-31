@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from "expo-router"
+import { useLocalSearchParams, useRouter, useGlobalSearchParams } from "expo-router"
 import { useEffect, useRef, useState } from "react"
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -6,8 +6,6 @@ import {
     Text,
     StyleSheet,
     Image,
-    Animated,
-    Dimensions,
     TouchableOpacity,
 } from 'react-native'
 import { Audio } from 'expo-av';
@@ -15,10 +13,16 @@ import MusicNoteLoading from "../../components/MusicNoteLoading"
 import { getArtist, getSong } from "../../../utils/api"
 import playButton from "../../../assets/images/playButton.png"
 import pause from "../../../assets/images/pause.png"
+import nextButton from "../../../assets/images/nextButton.png"
+import previous from "../../../assets/images/previous.png"
 
 
 export default function playSong() {
-    const { songid } = useLocalSearchParams()
+    const { songid, playlist } = useLocalSearchParams()
+    const router = useRouter()
+
+    const playlistArr = playlist ? JSON.parse(playlist) : []
+
     const [song, setSong] = useState(null)
     const [artists, setArtists] = useState([])
 
@@ -27,9 +31,9 @@ export default function playSong() {
 
     const [isLoading, setIsLoading] = useState(true)
     const [isError, setIsError] = useState(null)
-
-
-    const router = useRouter()
+    
+    
+    const dummyAudio = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
 
     useEffect(() => {
         setIsLoading(true)
@@ -46,9 +50,8 @@ export default function playSong() {
             .then(({ artist }) => setArtists(artist))
             .catch(() => setIsError(true))
             .finally(() => setIsLoading(false))
-    }, [song])
+    }, [songid])
 
-    const dummyAudio = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
 
 
     useEffect(() => {
@@ -77,7 +80,7 @@ export default function playSong() {
                 soundRef.current.unloadAsync();
             }
         };
-    }, [])
+    }, [songid])
 
     const togglePlayback = async () => {
         try {
@@ -102,9 +105,44 @@ export default function playSong() {
         } catch (err) {
             console.error("Playback error:", err);
         }
-    };
+    }
 
 
+    const nextSong = () => {
+        if (playlistArr.length===0){
+            console.log(empty)
+        }
+        const current = songid
+        const index = playlistArr.findIndex(song => song.song_id === current)
+
+        if (index !== -1 && index < playlistArr.length - 1) {
+            const next = playlistArr[index + 1].song_id
+            router.push({
+                pathname: `/songs/${next}`,
+                params: { songid: next, playlist: JSON.stringify(playlistArr) }
+              })
+        }
+        console.log("next done")
+
+    }
+    const prevSong = () => {
+        if (playlistArr.length===0){
+            console.log(empty)
+        }
+        const current = songid
+        const index = playlistArr.findIndex(song => song.song_id === current)
+      
+        if (index !== -1) {
+          const prevIndex = (index - 1 + playlistArr.length) % playlistArr.length
+          const prev = playlistArr[prevIndex].song_id
+          router.push({
+            pathname: `/songs/${prev}`,
+            params: { songid: prev, playlist: JSON.stringify(playlistArr) }
+          })
+        }
+        console.log("prev done")
+      }
+      
     if (isLoading) {
         return <MusicNoteLoading />
     }
@@ -116,7 +154,6 @@ export default function playSong() {
             </View>
         )
     }
-
     return (
         <LinearGradient
             colors={['#0a0a0a', '#66CDAA']}
@@ -125,19 +162,32 @@ export default function playSong() {
             style={styles.background}
         >
             <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                <Text style={{ color: '#fff', fontSize: 18 }}>← Back</Text>
+                <Text style={{ color: '#fff', fontSize: 18 }}>←</Text>
             </TouchableOpacity>
             <View style={styles.container}>
                 <Image source={{ uri: song.image }} style={styles.coverImage} />
                 <Text style={styles.songTitle}>{song.song_name}</Text>
                 <Text style={styles.artistName}>{artists.artists_name}</Text>
-                <TouchableOpacity onPress={togglePlayback} style={{ marginTop: 20 }}>
-                    {isPlaying ? (
-                        <Image source={pause} style={styles.playIcon} tintColor="white" />
-                    ) : (
-                        <Image source={playButton} style={styles.playIcon} tintColor="white" />
-                    )}
-                </TouchableOpacity>
+
+                <View style={styles.controls}>
+
+                    <TouchableOpacity onPress={prevSong}>
+                        <Image source={previous} style={styles.playIcon} tintColor="white" accessibilityLabel="previous song" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={togglePlayback}>
+                        {isPlaying ? (
+                            <Image source={pause} style={styles.playIcon} tintColor="white" accessibilityLabel="pause song" />
+                        ) : (
+                            <Image source={playButton} style={styles.playIcon} tintColor="white" accessibilityLabel="play song" />
+                        )}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={nextSong}>
+                        <Image source={nextButton} style={styles.playIcon} tintColor="white" accessibilityLabel="next song" />
+                    </TouchableOpacity>
+
+                </View>
 
 
 
@@ -150,6 +200,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    controls: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 30, // works in React Native 0.71+ or use marginRight manually
+        marginTop: 20,
     },
     container: {
         flex: 1,
