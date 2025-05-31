@@ -18,8 +18,8 @@ import previous from "../../../assets/images/previous.png"
 
 
 export default function playSong() {
-    const { songid, playlist } = useLocalSearchParams()
     const router = useRouter()
+    const { songid, playlist } = useLocalSearchParams()
 
     const playlistArr = playlist ? JSON.parse(playlist) : []
 
@@ -31,8 +31,8 @@ export default function playSong() {
 
     const [isLoading, setIsLoading] = useState(true)
     const [isError, setIsError] = useState(null)
-    
-    
+
+
     const dummyAudio = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
 
     useEffect(() => {
@@ -50,7 +50,7 @@ export default function playSong() {
             .then(({ artist }) => setArtists(artist))
             .catch(() => setIsError(true))
             .finally(() => setIsLoading(false))
-    }, [songid])
+    }, [song])
 
 
 
@@ -82,6 +82,19 @@ export default function playSong() {
         };
     }, [songid])
 
+
+    if (isLoading) {
+        return <MusicNoteLoading />
+    }
+
+    if (isError) {
+        return (
+            <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>Error loading song</Text>
+            </View>
+        )
+    }
+
     const togglePlayback = async () => {
         try {
             if (!soundRef.current) {
@@ -109,57 +122,49 @@ export default function playSong() {
 
 
     const nextSong = () => {
-        if (playlistArr.length===0){
-            console.log(empty)
-        }
-        const current = songid
-        const index = playlistArr.findIndex(song => song.song_id === current)
+        const current = songid;
+        const index = playlistArr.findIndex(song => song.song_id.toString() === current);
 
-        if (index !== -1 && index < playlistArr.length - 1) {
-            const next = playlistArr[index + 1].song_id
-            router.push({
-                pathname: `/songs/${next}`,
-                params: { songid: next, playlist: JSON.stringify(playlistArr) }
-              })
-        }
-        console.log("next done")
+        if (playlistArr.length === 0) return;
 
+        const nextIndex = (index + 1) % playlistArr.length;
+        const next = playlistArr[nextIndex].song_id;
+
+        router.push({
+            pathname: `/songs/${next}`,
+            params: {
+                playlist: JSON.stringify(playlistArr),
+            }
+        })
     }
+
+
     const prevSong = () => {
-        if (playlistArr.length===0){
-            console.log(empty)
-        }
+        if (!playlistArr || playlistArr.length === 0) return;
+
         const current = songid
-        const index = playlistArr.findIndex(song => song.song_id === current)
-      
+        const index = playlistArr.findIndex(song => song.song_id.toString() === songid)
+
         if (index !== -1) {
-          const prevIndex = (index - 1 + playlistArr.length) % playlistArr.length
-          const prev = playlistArr[prevIndex].song_id
-          router.push({
-            pathname: `/songs/${prev}`,
-            params: { songid: prev, playlist: JSON.stringify(playlistArr) }
-          })
+            const prevIndex = (index - 1 + playlistArr.length) % playlistArr.length
+            const prev = playlistArr[prevIndex].song_id
+            router.push({
+                pathname: `/songs/${prev}`,
+                params: {
+                    playlist: JSON.stringify(playlistArr)
+                }
+            })
+
         }
-        console.log("prev done")
-      }
-      
-    if (isLoading) {
-        return <MusicNoteLoading />
     }
 
-    if (isError) {
-        return (
-            <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>Error loading song</Text>
-            </View>
-        )
-    }
     return (
         <LinearGradient
             colors={['#0a0a0a', '#66CDAA']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.background}
+            key={songid}
         >
             <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                 <Text style={{ color: '#fff', fontSize: 18 }}>←</Text>
@@ -205,7 +210,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 30, // works in React Native 0.71+ or use marginRight manually
+        gap: 30,
         marginTop: 20,
     },
     container: {
@@ -253,4 +258,3 @@ const styles = StyleSheet.create({
         height: 30,
     },
 })
-//make play button back button next song button and repeat button and shuffle button
