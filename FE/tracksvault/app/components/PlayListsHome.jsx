@@ -10,12 +10,12 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native'
-import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
 import MusicNoteLoading from './MusicNoteLoading'
 import { getPlaylists } from '../../utils/api'
 import {useRouter} from 'expo-router'
 const router= useRouter()
+
 export default function PlayListsHome() {
   const [playlists, setPlaylists] = useState([])
   const [isLoading, setIsLoading] = useState(true)
