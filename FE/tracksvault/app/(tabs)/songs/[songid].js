@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter, useGlobalSearchParams } from "expo-router"
+import { useLocalSearchParams, useRouter } from "expo-router"
 import { useEffect, useRef, useState } from "react"
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -8,13 +8,16 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native'
-import { Audio } from 'expo-av';
+import { Audio } from 'expo-audio';
 import MusicNoteLoading from "../../components/MusicNoteLoading"
 import { getArtist, getSong } from "../../../utils/api"
 import playButton from "../../../assets/images/playButton.png"
 import pause from "../../../assets/images/pause.png"
 import nextButton from "../../../assets/images/nextButton.png"
 import previous from "../../../assets/images/previous.png"
+import shuffle from "../../../assets/images/shuffle.png"
+import repeat from "../../../assets/images/repeat.png"
+
 
 
 export default function playSong() {
@@ -28,6 +31,9 @@ export default function playSong() {
 
     const soundRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
+
+    const [isRepeat, setIsRepeat] = useState(false)
+    const [isShuffle, setIsShuffle] = useState(false)
 
     const [isLoading, setIsLoading] = useState(true)
     const [isError, setIsError] = useState(null)
@@ -120,14 +126,30 @@ export default function playSong() {
         }
     }
 
-
     const nextSong = () => {
+        if (playlistArr.length === 0) return
+
         const current = songid;
         const index = playlistArr.findIndex(song => song.song_id.toString() === current);
+        if (isRepeat) {
+            router.push({
+                pathname: `/songs/${current}`,
+                params: {
+                    playlist: JSON.stringify(playlistArr),
+                },
+            })
+            return
+        }
+        let nextIndex = (index + 1) % playlistArr.length
 
-        if (playlistArr.length === 0) return;
+        if (isShuffle) {
+            do {
+                nextIndex = Math.floor(Math.random() * playlistArr.length);
+            } while (nextIndex === index);
+        } else {
+            nextIndex = (index + 1) % playlistArr.length;
+        }
 
-        const nextIndex = (index + 1) % playlistArr.length;
         const next = playlistArr[nextIndex].song_id;
 
         router.push({
@@ -176,6 +198,10 @@ export default function playSong() {
 
                 <View style={styles.controls}>
 
+                    <TouchableOpacity onPress={() => setIsShuffle(!isShuffle)}>
+                        <Image source={shuffle} style={{width: 30,height: 30,color: isRepeat ? 'lime' : 'white'}}  accessibilityLabel="shuffle songs" />
+                    </TouchableOpacity>
+
                     <TouchableOpacity onPress={prevSong}>
                         <Image source={previous} style={styles.playIcon} tintColor="white" accessibilityLabel="previous song" />
                     </TouchableOpacity>
@@ -190,6 +216,10 @@ export default function playSong() {
 
                     <TouchableOpacity onPress={nextSong}>
                         <Image source={nextButton} style={styles.playIcon} tintColor="white" accessibilityLabel="next song" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => setIsRepeat(!isRepeat)}>
+                        <Image source={repeat} style={{width: 30,height: 30,color: isRepeat ? 'lime' : 'white'}} accessibilityLabel="repeat song" />
                     </TouchableOpacity>
 
                 </View>
