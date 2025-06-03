@@ -11,10 +11,9 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native'
-import MusicNoteLoading from "../../components/MusicNoteLoading";
+import MusicNoteLoading from "../components/MusicNoteLoading";
 import { LinearGradient } from 'expo-linear-gradient';
-import { getPlaylistSongs, getUser, getUsersByPlaylistId } from "../../../utils/api";
-const router = useRouter()
+import { getPlaylistSongs, getUser, getUsersByPlaylistId } from "../../utils/api";
 
 export default function PlaylistSongs() {
   const { playlistId } = useLocalSearchParams()
@@ -35,38 +34,35 @@ export default function PlaylistSongs() {
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false))
   },
-    [])
-
-  useEffect(() => {
-    setIsLoading(true);
-    getUsersByPlaylistId(playlistId)
-      .then(({ playlist }) => setUser(playlist))
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
-  }, [playlistId])
-
-  useEffect(() => {
-    if (!userId) return;
-    setIsLoading(true);
-    getUser(userId.user_id)
-      .then(({ user }) => setPfp(user.avatar_url))
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
-  }, [userId])
-
-
-  const scrollX = useRef(new Animated.Value(0)).current
-  const { width } = Dimensions.get('window')
-  const ITEM_WIDTH = width * 0.72
-  const SPACER_WIDTH = (width - ITEM_WIDTH) / 2
-
-  if (isLoading) {
-    return <MusicNoteLoading />
-  }
-
-  if (isError) {
-    return (
-      <View style={styles.center}>
+    [playlistId])
+    
+    useEffect(() => {
+      setIsLoading(true);
+      getUsersByPlaylistId(playlistId)
+        .then(({ playlist }) => {
+          setUser(playlist);
+          return getUser(playlist.user_id)
+        })
+        .then(({ user }) => {
+          setPfp(user.avatar_url)
+        })
+        .catch(() => setIsError(true))
+        .finally(() => setIsLoading(false))
+    }, [playlistId])
+    
+    
+    const scrollX = useRef(new Animated.Value(0)).current
+    const { width } = Dimensions.get('window')
+    const ITEM_WIDTH = width * 0.72
+    const SPACER_WIDTH = (width - ITEM_WIDTH) / 2
+    
+    if (isLoading) {
+      return <MusicNoteLoading />
+    }
+    
+    if (isError) {
+      return (
+        <View style={styles.center}>
         <Text>Something went wrong.</Text>
       </View>
     )
@@ -148,7 +144,7 @@ export default function PlaylistSongs() {
                     style={styles.playButton}
                     onPress={() => {
                       router.push({
-                        pathname: `/songs/${item.song_id}`,
+                        pathname: `songs/${item.song_id}`,
                         params: {
                           playlist: JSON.stringify(songs)
                         }
@@ -166,6 +162,9 @@ export default function PlaylistSongs() {
     </View>
   )
 }
+PlaylistSongs.options = {
+  tabBarStyle: { display: 'none' },
+};
 
 //ADD SAVE/VOTE
 const colors = {

@@ -8,15 +8,15 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native'
-import { Audio } from 'expo-audio';
-import MusicNoteLoading from "../../components/MusicNoteLoading"
-import { getArtist, getSong } from "../../../utils/api"
-import playButton from "../../../assets/images/playButton.png"
-import pause from "../../../assets/images/pause.png"
-import nextButton from "../../../assets/images/nextButton.png"
-import previous from "../../../assets/images/previous.png"
-import shuffle from "../../../assets/images/shuffle.png"
-import repeat from "../../../assets/images/repeat.png"
+import { Audio } from 'expo-av';
+import MusicNoteLoading from "../components/MusicNoteLoading"
+import { getArtist, getSong } from "../../utils/api"
+import playButton from "../../assets/images/playButton.png"
+import pause from "../../assets/images/pause.png"
+import nextButton from "../../assets/images/nextButton.png"
+import previous from "../../assets/images/previous.png"
+import shuffle from "../../assets/images/shuffle.png"
+import repeat from "../../assets/images/repeat.png"
 
 
 
