@@ -9,15 +9,19 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  TextInput,
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import MusicNoteLoading from './MusicNoteLoading'
-import { getPlaylists } from '../../utils/api'
+import { getPlaylists, handleSearch } from '../../utils/api'
 import {useRouter} from 'expo-router'
 const router= useRouter()
 
 export default function PlayListsHome() {
   const [playlists, setPlaylists] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults]= useState([])
+
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(null)
 
@@ -27,11 +31,20 @@ export default function PlayListsHome() {
   const SPACER_WIDTH = (width - ITEM_WIDTH) / 2
 
   useEffect(() => {
+    setIsLoading(true)
     getPlaylists()
       .then(({ playlists }) => setPlaylists(playlists))
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false))
   }, [])
+
+  useEffect(()=>{
+    setIsLoading(true)
+    handleSearch(searchQuery)
+    .then(({results})=> setSearchResults(results))
+    .catch(()=> setIsError(true))
+    .finally(()=> setIsLoading(false))
+  },[])
 
   if (isLoading) {
     return <MusicNoteLoading />
@@ -55,6 +68,17 @@ export default function PlayListsHome() {
       end={{ x: 1, y: 1 }}
       style={StyleSheet.absoluteFill}
     >
+          <View style={styles.searchStyle}>
+      <TextInput
+        placeholder="Search for songs..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        onSubmitEditing={handleSearch}
+        style={styles.input}
+        placeholderTextColor="#aaa"
+      />
+      {/* Render search results below here */}
+    </View>
         <ScrollView style={{ flex: 1 }}>
           <SafeAreaView style={{ alignItems: 'center', marginBottom: 24 }}>
             <Text style={styles.heading}>Browse Playlists</Text>
@@ -140,6 +164,14 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     fontFamily: 'System',
     textAlign: 'center',
+  },
+  searchStyle: { padding: 16 },
+  input: {
+    backgroundColor: '#222',
+    color: 'white',
+    padding: 10,
+    borderRadius: 8,
+    fontSize: 16,
   },
   playlistPic: {
     width: '100%',

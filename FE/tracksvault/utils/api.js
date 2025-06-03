@@ -46,3 +46,11 @@ export function  getArtist(artistId){
       return data
     })
 }
+
+export function handleSearch(searchQuery){
+  return API.get(`/search?search_term=${searchQuery}`)
+  .then(({data})=>{
+    return data
+  })
+}
+// /search?search_term=song one

@@ -48,6 +48,9 @@ export default function MusicNoteLoading() {
     </LinearGradient>
   )
 }
+MusicNoteLoading.options = {
+  tabBarStyle: { display: 'none' },
+};
 
 const styles = StyleSheet.create({
   container: {
