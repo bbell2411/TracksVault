@@ -10,17 +10,17 @@ import {
   ScrollView,
   SafeAreaView,
   TextInput,
+  Button,
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import MusicNoteLoading from './MusicNoteLoading'
-import { getPlaylists, handleSearch } from '../../utils/api'
-import {useRouter} from 'expo-router'
-const router= useRouter()
+import { getPlaylists, getSearch } from '../../utils/api'
+import { useRouter } from 'expo-router'
+const router = useRouter()
 
 export default function PlayListsHome() {
   const [playlists, setPlaylists] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults]= useState([])
 
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(null)
@@ -38,13 +38,14 @@ export default function PlayListsHome() {
       .finally(() => setIsLoading(false))
   }, [])
 
-  useEffect(()=>{
-    setIsLoading(true)
-    handleSearch(searchQuery)
-    .then(({results})=> setSearchResults(results))
-    .catch(()=> setIsError(true))
-    .finally(()=> setIsLoading(false))
-  },[])
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
+  
+    router.push({
+      pathname: "/search",
+      params: { query: searchQuery },
+    })
+  }
 
   if (isLoading) {
     return <MusicNoteLoading />
@@ -58,27 +59,32 @@ export default function PlayListsHome() {
     )
   }
 
+
   const playlistData = [{ key: 'left-spacer' }, ...playlists, { key: 'right-spacer' }]
 
   return (
     <View style={{ flex: 1 }}>
       <LinearGradient
-      colors={['#0a0a0a', '#66CDAA']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={StyleSheet.absoluteFill}
-    >
-          <View style={styles.searchStyle}>
-      <TextInput
-        placeholder="Search for songs..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        onSubmitEditing={handleSearch}
-        style={styles.input}
-        placeholderTextColor="#aaa"
-      />
-      {/* Render search results below here */}
-    </View>
+        colors={['#0a0a0a', '#66CDAA']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      >
+        <View style={styles.searchStyle}>
+          <TextInput
+            placeholder="Search for songs..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
+            style={styles.input}
+            placeholderTextColor="#aaa"
+          />
+          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+            <Text style={styles.searchButtonText}>Search</Text>
+          </TouchableOpacity>
+          
+
+        </View>
         <ScrollView style={{ flex: 1 }}>
           <SafeAreaView style={{ alignItems: 'center', marginBottom: 24 }}>
             <Text style={styles.heading}>Browse Playlists</Text>
@@ -132,7 +138,7 @@ export default function PlayListsHome() {
                   <Text style={styles.user}>{item.user_id}</Text>
                   <TouchableOpacity
                     style={styles.playButton}
-                    onPress={() => {router.push(`/playlist/${item.playlist_id}`)}}
+                    onPress={() => { router.push(`/playlist/${item.playlist_id}`) }}
                   >
                     <Text style={styles.playButtonText}>▶ View</Text>
                   </TouchableOpacity>
@@ -141,7 +147,7 @@ export default function PlayListsHome() {
             }}
           />
         </ScrollView>
-        </LinearGradient>
+      </LinearGradient>
     </View>
   )
 
@@ -165,13 +171,34 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
     textAlign: 'center',
   },
-  searchStyle: { padding: 16 },
+  searchStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 16,
+  },
   input: {
-    backgroundColor: '#222',
-    color: 'white',
-    padding: 10,
-    borderRadius: 8,
+    flex: 1,
+    backgroundColor: "#222",
+    color: "#fff",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    marginRight: 10,
     fontSize: 16,
+  },
+  
+searchButton: {
+  backgroundColor: "#66CDAA",
+  paddingVertical: 10,
+  paddingHorizontal: 16,
+  borderRadius: 10,
+  justifyContent: "center",
+  alignItems: "center",
+},
+  searchButtonText: {
+    color: "#0a0a0a",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   playlistPic: {
     width: '100%',
