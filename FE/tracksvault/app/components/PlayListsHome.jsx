@@ -46,7 +46,6 @@ export default function PlayListsHome() {
       params: { query: searchQuery },
     })
   }
-  console.log(searchQuery)
 
   if (isLoading) {
     return <MusicNoteLoading />

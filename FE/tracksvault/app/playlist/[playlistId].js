@@ -84,7 +84,7 @@ export default function PlaylistSongs() {
           <Text style={styles.heading}>
             {userId.name}
           </Text>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.push(`/`)}>
             <Text style={styles.backButtonText}>←</Text>
           </TouchableOpacity>
           <SafeAreaView style={styles.ownerInfo}>
