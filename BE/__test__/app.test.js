@@ -34,11 +34,13 @@ describe('GET /api/search', () => {
                 expect(search_result).toBeInstanceOf(Array)
                 expect(search_result.length).toBeGreaterThan(0)
                 search_result.forEach((song) => {
-                    const { song_id, song_name, link, artist_name } = song
+                    const { song_id, song_name, link, artist_name, image } = song
                     expect(typeof song_id).toBe("number")
                     expect(typeof song_name).toBe("string")
                     expect(typeof link).toBe("string")
                     expect(typeof artist_name).toBe("string")
+                    expect(typeof image).toBe("string")
+
                 })
             })
     })
