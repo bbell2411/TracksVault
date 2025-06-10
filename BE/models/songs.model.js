@@ -18,7 +18,7 @@ exports.fetchSongById = (id) => {
 }
 exports.searchSongs = (search_term) => {
     return db.query(
-        `SELECT songs.song_id, songs.song_name, songs.link, artists.artists_name AS artist_name
+        `SELECT songs.song_id, songs.song_name, songs.link, songs.image, artists.artists_name AS artist_name
          FROM songs
          JOIN artists ON songs.artist = artists.artist_id
          WHERE songs.song_name ILIKE $1 OR artists.artists_name ILIKE $1`,
