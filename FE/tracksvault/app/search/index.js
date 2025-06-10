@@ -35,9 +35,18 @@ export default function SearchResults() {
 
   if (isError) {
     return (
-      <View style={styles.center}>
-        <Text>Something went wrong.</Text>
-      </View>
+      <LinearGradient
+        colors={['#0a0a0a', '#66CDAA']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.background}
+      >
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Text style={{ color: '#fff', fontSize: 18 }}>←</Text>
+        </TouchableOpacity>
+
+        <Text style={{ fontSize: 40 }}>No results were found...</Text>
+      </LinearGradient>
     )
   }
   return (
@@ -56,9 +65,15 @@ export default function SearchResults() {
         keyExtractor={(item) => item.song_id}
         renderItem={({ item }) => (
           <View style={styles.container}>
-            <Image source={{ uri: item.image }} style={styles.coverImage} />
+            <TouchableOpacity   onPress={() => {
+                      router.push({
+                        pathname: `songs/${item.song_id}`
+                      })
+                    }}>
+              <Image source={{ uri: item.image }} style={styles.coverImage} />
+            </TouchableOpacity>
             <Text style={styles.songTitle}>{item.song_name}</Text>
-              <Text style={styles.artistName}>{item.artist_name}</Text>
+            <Text style={styles.artistName}>{item.artist_name}</Text>
           </View>
         )}
       />
@@ -101,7 +116,5 @@ const styles = StyleSheet.create({
   artistName: {
     fontSize: 18,
     color: '#aaa',
-},
+  },
 })
-//CHANGE THE BACKIEND TO INCLUDE SONG IMAGES :)
-// make it clickbale with a route to play the song
