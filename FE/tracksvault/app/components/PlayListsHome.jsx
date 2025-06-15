@@ -10,7 +10,6 @@ import {
   ScrollView,
   SafeAreaView,
   TextInput,
-  Button,
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import MusicNoteLoading from './MusicNoteLoading'

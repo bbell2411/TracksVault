@@ -1,8 +1,9 @@
 import React from "react";
 import PlayListsHome from "../components/PlayListsHome"
+import LoginPage from '../login/LoginPage'
 
 export default function HomeScreen() {
-  return <PlayListsHome />
+  return <LoginPage />
 }
  //#FF00FF pink shade switch
     // #66CDAA green
