@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { login } from '@/utils/api';
+import { login } from '@/utils/api'
+import { useUser } from '../context/UserContext'
 import MusicNoteLoading from '../components/MusicNoteLoading';
 
 export default function LoginScreen() {
+    const { setUser } = useUser()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -13,29 +15,27 @@ export default function LoginScreen() {
     const [isError, setIsError] = useState(null)
 
     const router = useRouter()
-    //GO ON REACT PLAYBACK ISSUE
-    //MAKE USERCONTEXT FOLDER
-    //SET USER IN HANDLELOG IN AND ROUTER.PUSH('/')
-    //WRAP USER PROVIDER TAG AROUND HP
-    // GET USER CONTEXT HERE!
 
     const handleLogin = () => {
         if (!username.trim() || !password.trim()) {
-            Alert.alert("Input Error", "Both fields are required.");
+            console.log("Input Error: Both fields are required.")
+            Alert.alert("Input Error", "Both fields are required.")
             return;
-          }
-
+        }
         setIsLoading(true)
-        login(users, password)
-            .then(({ user }) => console.log(user))
+        login(username, password)
+            .then(({ user }) => {
+                setUser(user)
+                router.push('/')
+            })
             .catch(() => setIsError(true))
             .finally(() => setIsLoading(false))
     }
 
 
-    //   if (isLoading) {
-    //     return <MusicNoteLoading />
-    //   }
+      if (isLoading) {
+        return <MusicNoteLoading />
+      }
 
     if (isError) {
         return (
