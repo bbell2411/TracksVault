@@ -3,7 +3,7 @@ import PlayListsHome from "../components/PlayListsHome"
 import LoginPage from '../login/LoginPage'
 
 export default function HomeScreen() {
-  return <LoginPage />
+  return <PlayListsHome />
 }
  //#FF00FF pink shade switch
     // #66CDAA green

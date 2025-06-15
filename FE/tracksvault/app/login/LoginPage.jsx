@@ -3,7 +3,7 @@ import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { login } from '@/utils/api'
 import { useUser } from '../context/UserContext'
-import MusicNoteLoading from '../components/MusicNoteLoading';
+import WelcomeLoader from '../components/WelcomeLoader'
 
 export default function LoginScreen() {
     const { setUser } = useUser()
@@ -11,14 +11,13 @@ export default function LoginScreen() {
     const [password, setPassword] = useState('')
 
 
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(null)
     const [isError, setIsError] = useState(null)
 
     const router = useRouter()
 
     const handleLogin = () => {
         if (!username.trim() || !password.trim()) {
-            console.log("Input Error: Both fields are required.")
             Alert.alert("Input Error", "Both fields are required.")
             return;
         }
@@ -28,13 +27,21 @@ export default function LoginScreen() {
                 setUser(user)
                 router.push('/')
             })
-            .catch(() => setIsError(true))
+            .catch((err) => {
+                const status = err?.response?.status || err?.status;
+                if (status === 404) {
+                  Alert.alert("Login Error", "Invalid username or password.")
+                } else {
+                  Alert.alert("Login Failed", "Something went wrong. Please try again.")
+                  setIsError(true)
+                }
+              })
             .finally(() => setIsLoading(false))
     }
 
 
       if (isLoading) {
-        return <MusicNoteLoading />
+        return <WelcomeLoader />
       }
 
     if (isError) {
