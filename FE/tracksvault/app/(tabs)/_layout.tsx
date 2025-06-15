@@ -42,6 +42,21 @@ const TabLayout = () => {
             headerShown: false,
             }}
         />
+        <Tabs.Screen
+            name="MyPlaylists"
+            options={{
+            title:"Playlists",
+            headerShown: false,
+            }}
+        />
+         <Tabs.Screen
+            name="Profile"
+            options={{
+            title:"Profile",
+            headerShown: false,
+            }}
+        />
+        
     </Tabs>  
   );
 };

@@ -53,3 +53,10 @@ export function getSearch(searchQuery){
     return data
   })
 }
+
+export function login(username,password){
+  return API.post('/login')
+  .then(({data})=>{
+    return data
+  })
+}
