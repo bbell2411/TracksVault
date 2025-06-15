@@ -12,11 +12,13 @@ import React from 'react'
 import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useColorScheme } from 'react-native'
+import {UserProvider} from '../context/UserContext'
 
 const TabLayout = () => {
   const colorScheme = useColorScheme();
 
   return (
+    <UserProvider>
     <Tabs
     screenOptions={
       {
@@ -58,7 +60,8 @@ const TabLayout = () => {
         />
         
     </Tabs>  
-  );
-};
+    </UserProvider>
+  )
+}
 
 export default TabLayout;

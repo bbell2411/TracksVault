@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { use } from 'react';
 
 const API = axios.create({
   baseURL: 'https://tracksvault.onrender.com/api',
@@ -55,7 +56,7 @@ export function getSearch(searchQuery){
 }
 
 export function login(username,password){
-  return API.post('/login')
+  return API.post('/login', {username, password})
   .then(({data})=>{
     return data
   })
