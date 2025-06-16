@@ -1,6 +1,5 @@
 import React from "react";
 import PlayListsHome from "../components/PlayListsHome"
-import LoginPage from '../login/LoginPage'
 
 export default function HomeScreen() {
   return <PlayListsHome />
@@ -10,4 +9,3 @@ export default function HomeScreen() {
     // #4169E1 blue
     // #720e9e purple
     // yellow #FEBE10
-    //FIX THE FUCKING TAB!!!!!!!!!
