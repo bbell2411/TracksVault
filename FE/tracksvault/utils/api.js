@@ -61,3 +61,10 @@ export function login(username,password){
     return data
   })
 }
+
+export function getUserPlaylists(username){
+  return API.get(`/users/${username}/playlists`)
+  .then(({data})=>{
+    return data
+  })
+}
