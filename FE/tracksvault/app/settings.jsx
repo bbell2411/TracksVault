@@ -1,7 +1,16 @@
-import { ScrollView, StyleSheet, TouchableOpacity, View, Text } from "react-native"
-
+import { ScrollView, StyleSheet, TouchableOpacity, View, Text, Alert, Platform } from "react-native"
+import { useRouter } from 'expo-router';
+import { useUser } from './context/UserContext';
 
 export default function settings() {
+    const { setUser } = useUser()
+    const router = useRouter()
+
+
+    const handleLogout = () => {
+        setUser(null)
+        router.replace('/login')
+    }
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -20,7 +29,22 @@ export default function settings() {
                 <TouchableOpacity style={styles.settingItem} onPress={() => console.log('Notification Settings')}>
                     <Text style={styles.settingText}>Notification Settings</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.settingItem} onPress={() => console.log('Notification Settings')}>
+                <TouchableOpacity style={styles.settingItem} onPress={() => {
+                    if (Platform.OS === 'web') {
+                        const confirmed = window.confirm('Are you sure you want to log out?');
+                        if (confirmed) handleLogout();
+                    }
+                    else {
+                        Alert.alert('Logout', 'Are you sure you want to log out?', [
+                            { text: 'Cancel', style: 'cancel' },
+                            {
+                                text: 'Logout', onPress: () => {
+                                    handleLogout()
+                                }
+                            }
+                        ])
+                    }
+                }}>
                     <Text style={{
                         color: '#8b0000',
                         fontSize: 18,
