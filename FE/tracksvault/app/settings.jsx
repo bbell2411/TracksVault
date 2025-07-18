@@ -20,7 +20,7 @@ export default function settings() {
                 <TouchableOpacity style={styles.settingItem} onPress={() => console.log('Profile Settings')}>
                     <Text style={styles.settingText}>Profile Settings</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.settingItem} onPress={() => console.log('Account Settings')}>
+                <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/PatchAccount')}>
                     <Text style={styles.settingText}>Account Settings</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.settingItem} onPress={() => console.log('Privacy Settings')}>
@@ -108,3 +108,5 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
 });
+
+//functionality for all using api
