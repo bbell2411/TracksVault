@@ -42,8 +42,6 @@ export default function Profile() {
       })
 
   }, [user])
-  console.log('User in Profile:', user)
-  console.log(playlists)
   return (
     <View
       style={{
@@ -171,5 +169,3 @@ export default function Profile() {
 
 }
 
-//dont forget logout functionality in settings
-//add further details to the profile page

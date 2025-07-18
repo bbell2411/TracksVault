@@ -22,6 +22,7 @@ export default function LoginScreen() {
             return;
         }
         setIsLoading(true)
+
         login(username, password)
             .then(({ user }) => {
                 setUser(user)
