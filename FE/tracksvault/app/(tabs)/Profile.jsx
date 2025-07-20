@@ -21,7 +21,6 @@ import settings from '../../assets/images/settings.png'
 
 export default function Profile() {
   const router = useRouter()
-  console.log(router)
   const { user } = useUser()
   const [playlists, setPlaylists] = useState([])
   const [isLoading, setIsloading] = useState(true)
