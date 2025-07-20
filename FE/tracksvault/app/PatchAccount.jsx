@@ -3,15 +3,11 @@ import { useUser } from './context/UserContext';
 import { useRouter } from 'expo-router';
 
 export default function PatchAccount() {
-  const { user } = useUser()
   const router = useRouter()
-  console.log(user)
   return (
     <View style={{
       flex: 1,
       backgroundColor: '#121212',
-      // alignItems: 'center',
-      // justifyContent: 'center',
     }}>
 
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -21,13 +17,13 @@ export default function PatchAccount() {
         Update your account details
       </Text>
 
-      <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/PatchAccount')}>
+      <TouchableOpacity style={styles.settingItem} onPress={() => router.push({ pathname: '/PatchMode', params: { mode: 'email' } })}>
         <Text style={styles.settingText}>Change Email</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/PatchAccount')}>
+      <TouchableOpacity style={styles.settingItem} onPress={() => router.push({ pathname: '/PatchMode', params: { mode: 'username' } })}>
         <Text style={styles.settingText}>Change Username</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/PatchAccount')}>
+      <TouchableOpacity style={styles.settingItem} onPress={() => router.push({ pathname: '/PatchMode', params: { mode: 'email' } })}>
         <Text style={styles.settingText}>Change Password</Text>
       </TouchableOpacity>
     </View>
