@@ -75,3 +75,12 @@ export function patchEmail(email, username) {
       return data
     })
 }
+
+
+export function patchUsername(username, new_username) {
+  return API.patch(`users/${username}`, { new_username })
+    .then(({ data }) => {
+      console.log('Username updated successfully:', data);
+      return data
+    })
+}

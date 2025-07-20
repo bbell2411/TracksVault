@@ -1,9 +1,9 @@
-// app/PatchAccount.jsx
+
 import { View, Text, TextInput, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useUser } from './context/UserContext';
 import { useState } from 'react';
-import { patchEmail } from '../utils/api';
+import { patchEmail, patchUsername } from '../utils/api';
 
 export default function PatchAccount() {
     const { user, setUser } = useUser()
@@ -11,10 +11,12 @@ export default function PatchAccount() {
     const router = useRouter()
     const [isloading, setIsLoading] = useState(false)
 
-    const [newUsername, setNewUsername] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
-    const [newEmail, setNewEmail] = useState('');
+    const [newEmail, setNewEmail] = useState('')
+
+    const [newUsername, setNewUsername] = useState('')
+    const [newPassword, setNewPassword] = useState('')
+
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState('')
 
 
     if (!user) {
@@ -56,7 +58,34 @@ export default function PatchAccount() {
             })
 
     }
-    if (isloading) return <ActivityIndicator size="large" color="#ccc" style={styles.loader} />
+
+    const handleUsername = () => {
+        if (newUsername.trim() === '') {
+            alert('Please enter a new username.')
+            return;
+        }
+        if (newUsername === user.username) {
+            alert('This is already your current username.')
+            return;
+        }
+        setIsLoading(true)
+        patchUsername(user.username, newUsername)
+            .then(({ updated_user }) => {
+                alert('username updated successfully!')
+                setUser(updated_user)
+                setNewUsername('')
+                router.replace("/Profile")
+
+            })
+            .catch((err) => {
+                console.error(err)
+                alert("Something went wrong while updating your username.")
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }
+    if (isloading) return <View style={styles.container}> <ActivityIndicator size="large" color="#ccc" style={styles.loader} /> </View>
 
     return (
         <View style={{
@@ -68,28 +97,140 @@ export default function PatchAccount() {
                 <Text style={{ color: '#fff', fontSize: 18 }}>←</Text>
             </TouchableOpacity>
             {mode === 'email' && (
-                <div style={{ color: '#fff', fontSize: 70, textAlign: 'center', justifyContent: 'center', border: '1px solid #fff', padding: 20, borderRadius: 10 }}>
-                    <Text style={{ color: '#fff', fontSize: 30, fontWeight: 800 }}>Change Email</Text>
-                    <br />
-                    <Text style={{ color: '#fff', fontSize: 25, fontWeigh: 700 }}>Current Email:  </Text>
-                    <Text style={{ color: '#fff', fontSize: 20, fontWeigh: 300 }}>{user.email}</Text>
-                    <br />
-                    <Text style={{ color: '#fff', fontSize: 25, fontWeigh: 700 }}>Enter New Email: </Text>
+                <View style={{
+                    backgroundColor: '#1e1e1e',
+                    padding: 24,
+                    borderRadius: 16,
+                    borderWidth: 1,
+                    borderColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 40,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 4,
+                    elevation: 5,
+                }}>
+                    <Text style={{
+                        color: '#fff',
+                        fontSize: 28,
+                        fontWeight: 'bold',
+                        marginBottom: 16,
+                        textAlign: 'center'
+                    }}>
+                        Change Email
+                    </Text>
+
+                    <Text style={{ color: '#aaa', fontSize: 20, fontWeight: '600', marginBottom: 4 }}>
+                        Current Email:
+                    </Text>
+                    <Text style={{ color: '#eee', fontSize: 18, fontWeight: '300', marginBottom: 20 }}>
+                        {user.email}
+                    </Text>
+
+                    <Text style={{ color: '#aaa', fontSize: 20, fontWeight: '600', marginBottom: 10 }}>
+                        Enter New Email:
+                    </Text>
+
                     <TextInput
                         placeholder="New Email"
-                        style={{ backgroundColor: 'darkgrey', padding: 5, marginTop: 40, borderRadius: 5 }}
-                        onChangeText={setNewEmail} />
-                    <TouchableOpacity style={styles.backButton} onPress={handleEmail}>
-                        <Text style={styles.backButtonText}>Update Email</Text>
+                        placeholderTextColor="#444"
+                        value={newEmail}
+                        onChangeText={setNewEmail}
+                        style={{
+                            width: '100%',
+                            backgroundColor: '#333',
+                            color: '#fff',
+                            paddingVertical: 10,
+                            paddingHorizontal: 12,
+                            borderRadius: 8,
+                            marginBottom: 20,
+                            fontSize: 16,
+                        }}
+                    />
+
+                    <TouchableOpacity
+                        onPress={handleEmail}
+                        style={{
+                            backgroundColor: '#1E90FF',
+                            paddingVertical: 12,
+                            paddingHorizontal: 20,
+                            borderRadius: 8,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text style={{
+                            color: '#fff',
+                            fontSize: 16,
+                            fontWeight: '600',
+                        }}>
+                            Update Email
+                        </Text>
                     </TouchableOpacity>
-                </div>
+                </View>
+
             )}
+
             {mode === 'username' && (
-                <>
-                    <Text style={{ color: '#fff', fontSize: 18 }}>Change Username</Text>
-                    <TextInput placeholder="New Username" style={{ backgroundColor: '#fff', padding: 10, marginTop: 10 }} />
-                </>
+                <View style={{
+                    backgroundColor: '#1e1e1e',
+                    padding: 20,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 40,
+                }}>
+
+                    <Text style={{
+                        color: '#aaa',
+                        fontSize: 20,
+                        fontWeight: '600',
+                        marginBottom: 10,
+                    }}>
+                        Change Username
+                    </Text>
+
+                    <TextInput
+                        placeholder="New Username"
+                        placeholderTextColor="#444"
+                        value={newUsername}
+                        onChangeText={setNewUsername}
+                        style={{
+                            width: '100%',
+                            backgroundColor: '#333',
+                            color: '#fff',
+                            paddingVertical: 10,
+                            paddingHorizontal: 12,
+                            borderRadius: 8,
+                            marginBottom: 20,
+                            fontSize: 16,
+                        }}
+                    />
+                    <TouchableOpacity
+                        onPress={handleUsername}
+                        style={{
+                            backgroundColor: '#1E90FF',
+                            paddingVertical: 12,
+                            paddingHorizontal: 20,
+                            borderRadius: 8,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text style={{
+                            color: '#fff',
+                            fontSize: 16,
+                            fontWeight: '600',
+                        }}>
+                            Update Username
+                        </Text>
+                    </TouchableOpacity>
+
+                </View>
             )}
+
             {mode === 'password' && (
                 <>
                     <Text style={{ color: '#fff', fontSize: 18 }}>Change Password</Text>
@@ -101,34 +242,24 @@ export default function PatchAccount() {
 }
 
 const styles = StyleSheet.create({
-    backButton: {
-        position: 'absolute',
-        top: 243,
-        left: 660,
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 10,
-        zIndex: 10,
-    },
-
-    backButtonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: '600',
-    },
     loader: {
         marginTop: 10,
     },
     back: {
         position: 'absolute',
-        top: 30,
+        top: 70,
         left: 30,
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderRadius: 20,
         zIndex: 10,
-      },
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#121212',
+    },
 })
 

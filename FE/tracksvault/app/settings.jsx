@@ -16,6 +16,11 @@ export default function settings() {
             <View style={styles.header}>
                 <Text style={styles.headerText}>Settings</Text>
             </View>
+
+            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                <Text style={{ color: '#fff', fontSize: 18 }}>←</Text>
+            </TouchableOpacity>
+
             <ScrollView style={styles.settingsList}>
                 <TouchableOpacity style={styles.settingItem} onPress={() => console.log('Profile Settings')}>
                     <Text style={styles.settingText}>Profile Settings</Text>
@@ -107,4 +112,14 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '500',
     },
+    backButton: {
+        position: 'absolute',
+        top: 10,
+        left: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        zIndex: 10,
+      }
 });
