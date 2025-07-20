@@ -166,7 +166,6 @@ PlaylistSongs.options = {
   tabBarStyle: { display: 'none' },
 };
 
-//ADD SAVE/VOTE
 const colors = {
   card: 'hsla(250, 25%, 15%, 0.6)',
   text: '#e0e0e0',

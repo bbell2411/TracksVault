@@ -108,5 +108,3 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
 });
-
-//functionality for all using api
