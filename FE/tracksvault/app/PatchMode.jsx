@@ -3,7 +3,7 @@ import { View, Text, TextInput, ActivityIndicator, StyleSheet, TouchableOpacity 
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useUser } from './context/UserContext';
 import { useState } from 'react';
-import { patchEmail, patchUsername } from '../utils/api';
+import { patchEmail, patchPassword, patchUsername } from '../utils/api';
 
 export default function PatchAccount() {
     const { user, setUser } = useUser()
@@ -14,9 +14,9 @@ export default function PatchAccount() {
     const [newEmail, setNewEmail] = useState('')
 
     const [newUsername, setNewUsername] = useState('')
-    const [newPassword, setNewPassword] = useState('')
 
-    const [newPasswordConfirm, setNewPasswordConfirm] = useState('')
+    const [oldPassword, setOldPassword] = useState('')
+    const [newPassword, setNewPassword] = useState('')
 
 
     if (!user) {
@@ -85,6 +85,27 @@ export default function PatchAccount() {
                 setIsLoading(false)
             })
     }
+    const handlePassword = () => {
+        if (oldPassword.trim() === '' || newPassword.trim() === '') {
+            alert('Please enter your password.')
+            return;
+        }
+        setIsLoading(true)
+        patchPassword(oldPassword, newPassword, user.username)
+            .then(() => {
+                alert('Password updated successfully!')
+                setNewPassword('')
+                setOldPassword('')
+                router.replace("/Profile")
+            })
+            .catch((err) => {
+                console.error(err)
+                alert("incorrect old password.")
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }
     if (isloading) return <View style={styles.container}> <ActivityIndicator size="large" color="#ccc" style={styles.loader} /> </View>
 
     return (
@@ -112,15 +133,6 @@ export default function PatchAccount() {
                     shadowRadius: 4,
                     elevation: 5,
                 }}>
-                    <Text style={{
-                        color: '#fff',
-                        fontSize: 28,
-                        fontWeight: 'bold',
-                        marginBottom: 16,
-                        textAlign: 'center'
-                    }}>
-                        Change Email
-                    </Text>
 
                     <Text style={{ color: '#aaa', fontSize: 20, fontWeight: '600', marginBottom: 4 }}>
                         Current Email:
@@ -232,11 +244,79 @@ export default function PatchAccount() {
             )}
 
             {mode === 'password' && (
-                <>
-                    <Text style={{ color: '#fff', fontSize: 18 }}>Change Password</Text>
-                    <TextInput placeholder="New Password" secureTextEntry style={{ backgroundColor: '#fff', padding: 10, marginTop: 10 }} />
-                </>
+                <View style={{
+                    backgroundColor: '#1e1e1e',
+                    padding: 20,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 40,
+                }}>
+
+                    <Text style={{
+                        color: '#fff',
+                        fontSize: 25,
+                        fontWeight: '700',
+                        marginBottom: 10,
+                    }}>
+                        Enter New Password:
+                    </Text>
+
+                    <TextInput
+                        placeholder="old Password"
+                        placeholderTextColor="#444"
+                        secureTextEntry
+                        value={oldPassword}
+                        onChangeText={setOldPassword}
+                        style={{
+                            width: '100%',
+                            backgroundColor: '#333',
+                            color: '#fff',
+                            paddingVertical: 10,
+                            paddingHorizontal: 12,
+                            borderRadius: 8,
+                            marginBottom: 20,
+                            fontSize: 16,
+                        }}
+                    />
+                    <TextInput
+                        placeholder="New Password"
+                        placeholderTextColor="#444"
+                        secureTextEntry
+                        value={newPassword}
+                        onChangeText={setNewPassword}
+                        style={{
+                            width: '100%',
+                            backgroundColor: '#333',
+                            color: '#fff',
+                            paddingVertical: 10,
+                            paddingHorizontal: 12,
+                            borderRadius: 8,
+                            marginBottom: 20,
+                            fontSize: 16,
+                        }}
+                    />
+
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: '#1E90FF',
+                            paddingVertical: 12,
+                            paddingHorizontal: 20,
+                            borderRadius: 8,
+                            alignItems: 'center',
+                        }}
+                        onPress={handlePassword}>
+                        <Text style={{
+                            color: '#fff',
+                            fontSize: 16,
+                            fontWeight: '600',
+                        }}>Update Password</Text>
+                    </TouchableOpacity>
+                </View>
             )}
+
         </View>
     )
 }
