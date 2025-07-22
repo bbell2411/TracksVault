@@ -23,7 +23,7 @@ export default function PatchAccount() {
       <TouchableOpacity style={styles.settingItem} onPress={() => router.push({ pathname: '/PatchMode', params: { mode: 'username' } })}>
         <Text style={styles.settingText}>Change Username</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.settingItem} onPress={() => router.push({ pathname: '/PatchMode', params: { mode: 'email' } })}>
+      <TouchableOpacity style={styles.settingItem} onPress={() => router.push({ pathname: '/PatchMode', params: { mode: 'password' } })}>
         <Text style={styles.settingText}>Change Password</Text>
       </TouchableOpacity>
     </View>
