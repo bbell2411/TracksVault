@@ -25,6 +25,7 @@ export default function playSong() {
     const { songid, playlist } = useLocalSearchParams()
 
     const playlistArr = playlist ? JSON.parse(playlist) : []
+    console.log(playlistArr)
 
     const [song, setSong] = useState(null)
     const [artists, setArtists] = useState([])

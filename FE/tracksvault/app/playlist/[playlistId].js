@@ -19,7 +19,7 @@ export default function PlaylistSongs() {
   const { playlistId } = useLocalSearchParams()
 
   const [songs, setSongs] = useState([])
-  const [userId, setUser] = useState(null)
+  const [userId, setUser] = useState("")
   const [pfp, setPfp] = useState(null)
 
   const [isLoading, setIsLoading] = useState(true)
@@ -35,34 +35,34 @@ export default function PlaylistSongs() {
       .finally(() => setIsLoading(false))
   },
     [playlistId])
-    
-    useEffect(() => {
-      setIsLoading(true);
-      getUsersByPlaylistId(playlistId)
-        .then(({ playlist }) => {
-          setUser(playlist);
-          return getUser(playlist.user_id)
-        })
-        .then(({ user }) => {
-          setPfp(user.avatar_url)
-        })
-        .catch(() => setIsError(true))
-        .finally(() => setIsLoading(false))
-    }, [playlistId])
-    
-    
-    const scrollX = useRef(new Animated.Value(0)).current
-    const { width } = Dimensions.get('window')
-    const ITEM_WIDTH = width * 0.72
-    const SPACER_WIDTH = (width - ITEM_WIDTH) / 2
-    
-    if (isLoading) {
-      return <MusicNoteLoading />
-    }
-    
-    if (isError) {
-      return (
-        <View style={styles.center}>
+
+  useEffect(() => {
+    setIsLoading(true);
+    getUsersByPlaylistId(playlistId)
+      .then(({ playlist }) => {
+        setUser(playlist);
+        return getUser(playlist.user_id)
+      })
+      .then(({ user }) => {
+        setPfp(user.avatar_url)
+      })
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false))
+  }, [playlistId])
+
+
+  const scrollX = useRef(new Animated.Value(0)).current
+  const { width } = Dimensions.get('window')
+  const ITEM_WIDTH = width * 0.72
+  const SPACER_WIDTH = (width - ITEM_WIDTH) / 2
+
+  if (isLoading) {
+    return <MusicNoteLoading />
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.center}>
         <Text>Something went wrong.</Text>
       </View>
     )
@@ -82,7 +82,7 @@ export default function PlaylistSongs() {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Text style={styles.heading}>
-            {userId.name}
+            {userId.name ? userId.name : "loading..."}
           </Text>
           <TouchableOpacity style={styles.backButton} onPress={() => router.push(`/`)}>
             <Text style={styles.backButtonText}>←</Text>
@@ -146,7 +146,7 @@ export default function PlaylistSongs() {
                       router.push({
                         pathname: `songs/${item.song_id}`,
                         params: {
-                          playlist: JSON.stringify(songs)
+                          playlist: JSON.stringify(songs),
                         }
                       })
                     }}
@@ -284,3 +284,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 })
+//fix weird error (userId.name)
