@@ -106,7 +106,7 @@ export default function PatchAccount() {
                 setIsLoading(false)
             })
     }
-    if (isloading) return <View style={styles.container}> <ActivityIndicator size="large" color="#ccc" style={styles.loader} /> </View>
+    if (isloading) return <View style={styles.container}> <ActivityIndicator size="large" color="#ccc" style={styles.loader} /></View>
 
     return (
         <View style={{
@@ -342,4 +342,3 @@ const styles = StyleSheet.create({
         backgroundColor: '#121212',
     },
 })
-

@@ -85,10 +85,8 @@ export function patchUsername(username, new_username) {
 }
 
 export function patchPassword(old_password, new_password, username) {
-  console.log("in", old_password, new_password, username)
   return API.patch(`users/${username}/password`, { old_password, new_password })
     .then(({ data }) => {
-      console.log(data,"new data")
       return data
     })
 }

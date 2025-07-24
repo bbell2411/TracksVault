@@ -1,7 +1,6 @@
 import { Slot, useRouter, useSegments } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { UserProvider, useUser } from './context/UserContext'
-import Welcome from './components/WelcomeLoader'
 
 export default function RootLayout() {
     return (
@@ -32,17 +31,3 @@ function InnerApp() {
 
     return <Slot />;
 }
-
-//handle logout logic
-//A confirm dialog before logging out
-//make the homepage have user info
-//THESE POINTS:
-// An encrypted version of AsyncStorage for better security
-
-// How to save & persist just a token instead of the whole user object
-
-// Auto-expire sessions (token expiry handling)
-
-// Logout logic tied to token expiration
-
-
