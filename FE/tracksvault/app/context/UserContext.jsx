@@ -8,7 +8,8 @@ export const UserProvider = ({ children }) => {
   const [user, setUserState] = useState(undefined)
 
   const setUser = async (newUser) => {
-    setUserState(newUser);
+    delete newUser.password
+    setUserState(newUser)
     if (newUser) {
       await AsyncStorage.setItem('user', JSON.stringify(newUser));
     } else {

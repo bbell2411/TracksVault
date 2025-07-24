@@ -79,3 +79,5 @@ const styles = StyleSheet.create({
     }
 })
 
+//local storage
+//functionaly and button handling logic
