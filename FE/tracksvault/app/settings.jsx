@@ -22,7 +22,7 @@ export default function settings() {
             </TouchableOpacity>
 
             <ScrollView style={styles.settingsList}>
-                <TouchableOpacity style={styles.settingItem} onPress={() => console.log('Profile Settings')}>
+                <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/ProfileSettings')}>
                     <Text style={styles.settingText}>Profile Settings</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/PatchAccount')}>
