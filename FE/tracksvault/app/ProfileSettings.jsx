@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from "reac
 import { useUser } from "./context/UserContext"
 import { useEffect, useState } from "react"
 import { useRouter } from "expo-router"
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function ProfileSettings() {
     const { user } = useUser()
