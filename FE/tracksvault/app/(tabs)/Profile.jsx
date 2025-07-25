@@ -2,22 +2,18 @@ import React, { useEffect, useState, useRef, use } from 'react'
 import {
   View,
   Text,
-  StyleSheet,
   Image,
-  Animated,
-  Dimensions,
   TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  TextInput,
   FlatList,
+  ActivityIndicator,
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-// import MusicNoteLoading from './MusicNoteLoading'
-import { getPlaylists, getSearch, getUserPlaylists } from '../../utils/api'
+import { getUserPlaylists } from '../../utils/api'
 import { useRouter } from 'expo-router'
 import { useUser } from '../context/UserContext'
 import settings from '../../assets/images/settings.png'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 export default function Profile() {
   const router = useRouter()
@@ -25,6 +21,28 @@ export default function Profile() {
   const [playlists, setPlaylists] = useState([])
   const [isLoading, setIsloading] = useState(true)
   const [error, setError] = useState(null)
+  const [bio, setbio] = useState('')
+  const [birthday, setBirthday] = useState('')
+  const [num, setNum] = useState('')
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const saved = await AsyncStorage.getItem('profileSettings')
+        if (saved) {
+          const data = JSON.parse(saved)
+          setbio(data.bio || '')
+          setBirthday(data.birthday || '')
+          setNum(data.phone || '')
+        }
+      } catch (e) {
+        setError(true)
+        console.log("Failed to load profile", e)
+      }
+    }
+
+    loadProfile()
+  }, [])
 
   useEffect(() => {
     if (!user) return;
@@ -41,6 +59,34 @@ export default function Profile() {
       })
 
   }, [user])
+
+  if (error) {
+    return (
+      <View style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <Text style={{
+          color: 'red',
+          fontSize: 18,
+        }}>Error loading song</Text>
+      </View>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#121212'
+      }}>
+        <ActivityIndicator size="large" color="#ccc" marginTop="10" />
+      </View>
+    )
+  }
   return (
     <View
       style={{
@@ -105,6 +151,28 @@ export default function Profile() {
       >
         {user?.username || 'Guest User'}
       </Text>
+      <View
+        style={{
+          marginTop: 20,
+          padding: 15,
+          backgroundColor: '#000000',
+          borderRadius: 12,
+          width: '90%',
+          alignSelf: 'center',
+          shadowColor: '#000',
+          shadowOpacity: 0.2,
+          shadowOffset: { width: 0, height: 2 },
+          shadowRadius: 4,
+          elevation: 5,
+        }}>
+        <Text style={{ color: 'white', fontSize: 18, marginBottom: 8 }}>
+          💬 Bio: <Text style={{ color: '#bbb' }}>{bio || 'Not set'}</Text>
+        </Text>
+        <Text style={{ color: 'white', fontSize: 18, marginBottom: 8 }}>
+          🎂 Birthday: <Text style={{ color: '#bbb' }}>{birthday || 'Not set'}</Text>
+        </Text>
+      </View>
+
       <LinearGradient
         colors={['#0a0a0a', '#66CDAA']}
         start={{ x: 0, y: 0 }}
@@ -119,6 +187,7 @@ export default function Profile() {
           elevation: 15,
           width: '90%',
           maxHeight: 300,
+          bottom: -50,
         }}
       >
         <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 10 }}>

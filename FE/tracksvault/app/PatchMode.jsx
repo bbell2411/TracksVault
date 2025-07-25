@@ -106,6 +106,14 @@ export default function PatchAccount() {
                 setIsLoading(false)
             })
     }
+
+    if (isError) {
+        return (
+            <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>Error loading song</Text>
+            </View>
+        )
+    }
     if (isloading) {
         return (
             <View style={styles.container}>
@@ -348,4 +356,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#121212',
     },
+    errorContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 18,
+    }
 })
+
